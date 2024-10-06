@@ -1,11 +1,22 @@
+"use client";
+
 import Logo from '@/components/global/Logo'
-import { UserButton } from '@clerk/nextjs'
+import { OrganizationSwitcher, useAuth, UserButton } from '@clerk/nextjs'
 import React from 'react'
+import { ModeToggle } from './ModeToggle';
 
 const Header = () => {
+  const { orgId } = useAuth();
+  
   return (
-    <div className='flex items-center justify-between p-3 shadow-sm'>
+    <div className='flex items-center justify-around p-4 shadow shadow-gray-800'>
         <Logo/>
+        <OrganizationSwitcher 
+        afterCreateOrganizationUrl='/dashboard'
+        afterLeaveOrganizationUrl='/dashboard' 
+        />
+
+        <ModeToggle/>
         <UserButton/>    
     </div>
   )
