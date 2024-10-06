@@ -22,46 +22,46 @@ const routes = [
   { title: "About", href: "/about" },
 ];
 
-const components = [
-  {
-    title: "Alert Dialog",
-    href: "#",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "#",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "#",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "#",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "#",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "#",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
+// const components = [
+//   {
+//     title: "Alert Dialog",
+//     href: "#",
+//     description:
+//       "A modal dialog that interrupts the user with important content and expects a response.",
+//   },
+//   {
+//     title: "Hover Card",
+//     href: "#",
+//     description:
+//       "For sighted users to preview content available behind a link.",
+//   },
+//   {
+//     title: "Progress",
+//     href: "#",
+//     description:
+//       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+//   },
+//   {
+//     title: "Scroll-area",
+//     href: "#",
+//     description: "Visually or semantically separates content.",
+//   },
+//   {
+//     title: "Tabs",
+//     href: "#",
+//     description:
+//       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+//   },
+//   {
+//     title: "Tooltip",
+//     href: "#",
+//     description:
+//       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+//   },
+// ];
 
 const Header = () => {
-  const [path, setPath] = useState("#products");
+  const [path, setPath] = useState("");
 
   return (
     <header className="p-4 flex justify-center items-center">
@@ -112,13 +112,13 @@ const Header = () => {
                   </span>
                 </li>
                 <ListItem href="#" title="Introduction">
-                  Re-usable components built using Radix UI and Tailwind CSS.
+                  Write, Plan & Organize with our cutting edge AI
                 </ListItem>
-                <ListItem href="#" title="Installation">
-                  How to install dependencies and structure your app.
+                <ListItem href="#" title="AI Integration">
+                  AI integration to help you ease in.
                 </ListItem>
-                <ListItem href="#" title="Typography">
-                  Styles for headings, paragraphs, lists...etc
+                <ListItem href="#" title="Diverse Templates">
+                  Templates for project, travel, meal, organization...etc.
                 </ListItem>
               </ul>
             </NavigationMenuContent>
@@ -202,12 +202,12 @@ const Header = () => {
       </NavigationMenu>
 
       <aside className="flex w-full justify-end gap-4">
-        <Link href={"/login"}>
+        <Link href={"/sign-in"}>
           <Button variant="btn-secondary" className="px-6 hidden sm:block">
             Login
           </Button>
         </Link>
-        <Link href={"/signup"}>
+        <Link href={"/sign-up"}>
           <Button variant="btn-primary" className="whitespace-nowrap">
             Sign up
           </Button>
