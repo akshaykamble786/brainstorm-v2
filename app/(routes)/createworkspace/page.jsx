@@ -4,8 +4,12 @@ import CoverPicker from '@/app/_components/CoverPicker';
 import EmojiPickerComponent from '@/app/_components/EmojiPickerComponent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { SmilePlus } from 'lucide-react';
+import { db } from '@/config/FirebaseConfig';
+import { useAuth, useUser } from '@clerk/nextjs';
+import { doc, setDoc } from 'firebase/firestore';
+import { Loader2Icon, SmilePlus } from 'lucide-react';
 import Image from 'next/image'
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 const CreateWorkspace = () => {
@@ -13,9 +17,46 @@ const CreateWorkspace = () => {
   const [coverImage, setCoverImage] = useState('/cover.png');
   const [workspaceName, setWorkspaceName] = useState("");
   const [emoji, setEmoji] = useState();
+  const [loading, setLoading] = useState();
+
+  const { user } = useUser();
+  const { orgId } = useAuth();
+  
+  const router = useRouter();
+
+  const OnCreateWorkspace = async () => {
+    setLoading(true);
+    const workspaceId = Date.now();
+    const result = await setDoc(doc(db, 'Workspace', workspaceId.toString()),{
+        workspaceName : workspaceName,
+        emoji : emoji,
+        coverImage : coverImage,
+        createdBy : user?.primaryEmailAddress?.emailAddress,
+        id : workspaceId,
+        orgId : orgId ? orgId : user?.primaryEmailAddress?.emailAddress
+    });
+
+    const docId = crypto.randomUUID();
+    await setDoc(doc(db,'workspaceDocuments',docId.toString()),{
+      workspaceId : workspaceId,
+      createdBy : user?.primaryEmailAddress?.emailAddress,
+      coverImage : null,
+      emoji : null,
+      id: docId,
+      documentOutput: []
+    });
+
+    await setDoc(doc(db,'documentOutput',docId.toString()),{
+      docId: docId,
+      output : []
+    })
+
+    setLoading(false);
+    router.replace("/workspace/"+workspaceId+"/"+docId);
+  }
 
   return (
-    <div className='p-10 md:px-36 lg:px-52 xl:px-80 py-20'>
+    <div className='px-10 md:px-36 lg:px-52 xl:px-80 py-14'>
       <div className='shadow-2xl rounded-xl dark:border border-gray-800'>
 
         <CoverPicker setNewCover={(v) => setCoverImage(v)}>
@@ -45,9 +86,12 @@ const CreateWorkspace = () => {
           </div>
 
           <div className="mt-7 flex justify-end gap-6">
-            <Button disabled={!workspaceName?.length} className="text-sm">Create</Button>
+            <Button disabled={!workspaceName?.length || loading} className="text-sm" onClick={OnCreateWorkspace}>
+              Create {loading && <Loader2Icon className='animate-spin ml-2'/>}
+            </Button>
             <Button variant="outline" className="text-sm">Cancel</Button>
           </div>
+
         </div>
       </div>
     </div>

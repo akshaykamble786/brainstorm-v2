@@ -218,7 +218,7 @@ const Header = () => {
             className="whitespace-nowrap text-sm"
             onClick={() => signOut()}
           >
-            Logout
+            Log out
           </Button>
           <ModeToggle/>
         </>
