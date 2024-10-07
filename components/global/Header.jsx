@@ -14,6 +14,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import Logo from "./Logo";
+import { useAuth } from "@clerk/nextjs";
+import { ModeToggle } from "@/app/(routes)/dashboard/_components/ModeToggle";
 
 const routes = [
   { title: "Features", href: "/features" },
@@ -62,6 +64,7 @@ const routes = [
 
 const Header = () => {
   const [path, setPath] = useState("");
+  const { isSignedIn, signOut } = useAuth();
 
   return (
     <header className="p-4 flex justify-center items-center">
@@ -202,17 +205,39 @@ const Header = () => {
       </NavigationMenu>
 
       <aside className="flex w-full justify-end gap-4">
-        <Link href={"/sign-in"}>
-          <Button variant="btn-secondary" className="px-6 hidden sm:block">
-            Login
+      {isSignedIn ? (
+        <>
+          {/* If the user is logged in, show Dashboard and Logout buttons */}
+          <Link href="/dashboard">
+            <Button variant="outline" className="px-3 hidden sm:block">
+              Go to Dashboard &rarr;
+            </Button>
+          </Link>
+          <Button
+            variant="btn-primary"
+            className="whitespace-nowrap text-sm"
+            onClick={() => signOut()}
+          >
+            Logout
           </Button>
-        </Link>
-        <Link href={"/sign-up"}>
-          <Button variant="btn-primary" className="whitespace-nowrap">
-            Sign up
-          </Button>
-        </Link>
-      </aside>
+          <ModeToggle/>
+        </>
+      ) : (
+        <>
+          {/* If the user is not logged in, show Login and Sign up buttons */}
+          <Link href="/sign-in">
+            <Button variant="btn-secondary" className="px-6 hidden sm:block">
+              Login
+            </Button>
+          </Link>
+          <Link href="/sign-up">
+            <Button variant="btn-primary" className="whitespace-nowrap">
+              Sign up
+            </Button>
+          </Link>
+        </>
+      )}
+    </aside>
     </header>
   );
 };
