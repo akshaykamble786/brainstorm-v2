@@ -207,7 +207,6 @@ const Header = () => {
       <aside className="flex w-full justify-end gap-4">
       {isSignedIn ? (
         <>
-          {/* If the user is logged in, show Dashboard and Logout buttons */}
           <Link href="/dashboard">
             <Button variant="outline" className="px-3 hidden sm:block">
               Go to Dashboard &rarr;
@@ -215,7 +214,7 @@ const Header = () => {
           </Link>
           <Button
             variant="btn-primary"
-            className="whitespace-nowrap text-sm"
+            className="whitespace-nowrap text-md hover:opacity-70"
             onClick={() => signOut()}
           >
             Log out

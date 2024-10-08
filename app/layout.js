@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from "@/lib/providers/ThemeProvider";
 import { twMerge } from "tailwind-merge";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
           enableSystem
         >
           <ClerkProvider>
+            <Toaster/>
             {children}
           </ClerkProvider>
         </ThemeProvider>
