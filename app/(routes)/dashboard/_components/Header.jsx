@@ -9,7 +9,7 @@ const Header = () => {
   const { orgId } = useAuth();
   
   return (
-    <div className='flex items-center justify-around p-4 shadow shadow-gray-800'>
+    <div className='flex items-center justify-around p-4 shadow dark:shadow-gray-800 shadow-gray-300'>
         <Logo/>
         <OrganizationSwitcher 
         afterCreateOrganizationUrl='/dashboard'

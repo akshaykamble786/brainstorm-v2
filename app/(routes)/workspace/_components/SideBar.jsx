@@ -4,14 +4,17 @@ import Logo from "@/components/global/Logo";
 import { Button } from "@/components/ui/button";
 import { db } from "@/config/FirebaseConfig";
 import { collection, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { Bell, Loader2Icon } from "lucide-react";
+import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
-import { useUser } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import { ModeToggle } from "../../dashboard/_components/ModeToggle";
+import Diamond from "../../../../public/icons/diamond.svg"
+import Image from "next/image";
 
 const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT;
 
@@ -72,10 +75,29 @@ const SideBar = ({ params }) => {
 
     return (
         <div className="h-screen md:w-72 hidden md:block fixed p-5 shadow-lg border-r border-gray-200 dark:border-gray-800">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-4">
                 <Logo />
                 <Bell className="size-5 text-gray-500 cursor-pointer" />
             </div>
+            {/* <div className="mt-5 w-[85%]">
+                <div className="flex justify-between items-center mb-2">
+                    <Image src={Diamond} height={18} width={18} alt="diamond icon" />
+                    <h2 className="text-sm font-light opacity-50">Free Plan</h2>
+                    <h2 className="text-sm font-light"><strong>{documentList?.length}</strong> out of <strong>5</strong> files used</h2>
+                </div>
+                <Progress value={(documentList?.length / MAX_FILE) * 100} className="h-2 w-64 rounded-3xl" />
+            </div> */}
+            <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center">
+                    <Image src={Diamond} height={18} width={18} alt="diamond icon" />
+                    <h2 className="text-sm font-light opacity-50 ml-2">Free Plan</h2>
+                </div>
+                <h2 className="text-sm font-light">
+                    <strong>{documentList?.length}</strong> out of <strong>5</strong> files used
+                </h2>
+            </div>
+            <Progress value={(documentList?.length / MAX_FILE) * 100} className="h-2 w-64 rounded-3xl" />
+
             <hr className="my-4"></hr>
 
             <div className="flex justify-between items-center">
@@ -87,11 +109,17 @@ const SideBar = ({ params }) => {
 
             <DocumentList documentList={documentList} params={params} />
 
-            <div className="absolute bottom-2 w-[85%]">
-                <Progress value={(documentList?.length / MAX_FILE) * 100} className="h-2 w-64 rounded-3xl" />
-                <div className="flex justify-between items-center mt-2">
-                    <h2 className="text-sm font-light"><strong>{documentList?.length}</strong> out of <strong>5</strong> files used</h2>
-                    <h2 className="text-sm font-light">Free Plan</h2>
+            <div className="border flex justify-between items-center border-gray-800 rounded-xl absolute bottom-2 w-[90%] py-2 px-2">
+                <div className="flex gap-3">
+                    <UserButton />
+                    <div className="flex-col gap-4">
+                        <h2 className="text-sm opacity-50">Free Plan</h2>
+                        <h2 className="text-xs">{user?.fullName}</h2>
+                    </div>
+                </div>
+                <div className="flex justify-end items-center gap-2">
+                    <LogOutIcon onClick={() => signOut()} />
+                    <ModeToggle />
                 </div>
             </div>
         </div>

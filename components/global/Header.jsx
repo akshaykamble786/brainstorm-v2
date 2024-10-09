@@ -223,7 +223,6 @@ const Header = () => {
         </>
       ) : (
         <>
-          {/* If the user is not logged in, show Login and Sign up buttons */}
           <Link href="/sign-in">
             <Button variant="btn-secondary" className="px-6 hidden sm:block">
               Login
