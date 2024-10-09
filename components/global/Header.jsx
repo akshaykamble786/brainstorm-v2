@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import Logo from "./Logo";
-import { useAuth } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
 import { ModeToggle } from "@/app/(routes)/dashboard/_components/ModeToggle";
 
 const routes = [
@@ -60,11 +60,11 @@ const routes = [
 //     description:
 //       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
 //   },
-// ];
+// ];signOut
 
 const Header = () => {
   const [path, setPath] = useState("");
-  const { isSignedIn, signOut } = useAuth();
+  const { isSignedIn,  } = useAuth();
 
   return (
     <header className="p-4 flex justify-center items-center">

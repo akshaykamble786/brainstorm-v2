@@ -2,12 +2,12 @@ import React from "react";
 import DocumentHeader from "./DocumentHeader";
 import DocumentInfo from "./DocumentInfo";
 
-const DocumentEditor = () => {
+const DocumentEditor = ({params}) => {
     return (
         <div>
             {/* Header */}
             <DocumentHeader />
-            <DocumentInfo />
+            <DocumentInfo params={params} />
             {/* rich text editor */}
         </div>
     )

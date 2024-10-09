@@ -7,7 +7,7 @@ import { collection, doc, onSnapshot, query, setDoc, where } from "firebase/fire
 import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useAuth, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast"
@@ -75,22 +75,14 @@ const SideBar = ({ params }) => {
 
     return (
         <div className="h-screen md:w-72 hidden md:block fixed p-5 shadow-lg border-r border-gray-200 dark:border-gray-800">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-5">
                 <Logo />
                 <Bell className="size-5 text-gray-500 cursor-pointer" />
             </div>
-            {/* <div className="mt-5 w-[85%]">
-                <div className="flex justify-between items-center mb-2">
-                    <Image src={Diamond} height={18} width={18} alt="diamond icon" />
-                    <h2 className="text-sm font-light opacity-50">Free Plan</h2>
-                    <h2 className="text-sm font-light"><strong>{documentList?.length}</strong> out of <strong>5</strong> files used</h2>
-                </div>
-                <Progress value={(documentList?.length / MAX_FILE) * 100} className="h-2 w-64 rounded-3xl" />
-            </div> */}
             <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                     <Image src={Diamond} height={18} width={18} alt="diamond icon" />
-                    <h2 className="text-sm font-light opacity-50 ml-2">Free Plan</h2>
+                    <h2 className="text-sm font-light dark:opacity-50 ml-2">Free Plan</h2>
                 </div>
                 <h2 className="text-sm font-light">
                     <strong>{documentList?.length}</strong> out of <strong>5</strong> files used
@@ -113,7 +105,7 @@ const SideBar = ({ params }) => {
                 <div className="flex gap-3">
                     <UserButton />
                     <div className="flex-col gap-4">
-                        <h2 className="text-sm opacity-50">Free Plan</h2>
+                        <h2 className="text-sm dark:opacity-50">Free Plan</h2>
                         <h2 className="text-xs">{user?.fullName}</h2>
                     </div>
                 </div>

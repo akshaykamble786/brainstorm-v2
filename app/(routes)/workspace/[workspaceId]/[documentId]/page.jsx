@@ -14,7 +14,7 @@ const WorkspaceDocument = ({params}) => {
       </div>
 
       <div className='md:ml-72'>
-        <DocumentEditor/>
+        <DocumentEditor params={params}/>
       </div>
     </div>
   )

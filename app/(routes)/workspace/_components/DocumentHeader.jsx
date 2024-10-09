@@ -4,7 +4,7 @@ import React from "react";
 
 const DocumentHeader = () => {
     return(
-        <div className="flex justify-end items-center p-3 px-7 border-b border-gray-700">
+        <div className="flex justify-end items-center p-3 px-7">
             <div></div>
             <OrganizationSwitcher/>
             <div>
