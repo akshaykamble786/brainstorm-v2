@@ -9,7 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@alkhipce/editorjs-aitext": "^1.2.0",
     "@clerk/nextjs": "^5.7.1",
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/code": "^2.9.2",
+    "@editorjs/delimiter": "^1.4.2",
+    "@editorjs/editorjs": "^2.30.6",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/list": "^1.10.0",
+    "@editorjs/table": "^2.4.2",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
@@ -19,6 +27,7 @@
     "@radix-ui/react-toast": "^1.2.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "editorjs-alert": "^1.1.4",
     "emoji-picker-react": "^4.12.0",
     "firebase": "^10.14.0",
     "framer-motion": "^11.11.1",
@@ -36,6 +45,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.14",
     "postcss": "^8",
+    "simple-image-editorjs": "^1.4.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.6.2"
   }

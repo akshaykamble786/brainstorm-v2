@@ -64,7 +64,7 @@ const routes = [
 
 const Header = () => {
   const [path, setPath] = useState("");
-  const { isSignedIn,  } = useAuth();
+  const { isSignedIn, } = useAuth();
 
   return (
     <header className="p-4 flex justify-center items-center">
@@ -174,7 +174,7 @@ const Header = () => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem> */}
-          
+
           <NavigationMenuItem>
             <NavigationMenuLink
               className={cn(navigationMenuTriggerStyle(), {
@@ -205,37 +205,38 @@ const Header = () => {
       </NavigationMenu>
 
       <aside className="flex w-full justify-end gap-4">
-      {isSignedIn ? (
-        <>
-          <Link href="/dashboard">
-            <Button variant="outline" className="px-3 hidden sm:block">
-              Go to Dashboard &rarr;
-            </Button>
-          </Link>
-          <Button
-            variant="btn-primary"
-            className="whitespace-nowrap text-md hover:opacity-70"
-            onClick={() => signOut()}
-          >
-            Log out
-          </Button>
-          <ModeToggle/>
-        </>
-      ) : (
-        <>
-          <Link href="/sign-in">
-            <Button variant="btn-secondary" className="px-6 hidden sm:block">
-              Login
-            </Button>
-          </Link>
-          <Link href="/sign-up">
-            <Button variant="btn-primary" className="whitespace-nowrap">
-              Sign up
-            </Button>
-          </Link>
-        </>
-      )}
-    </aside>
+        {isSignedIn ? (
+          <>
+            <Link href="/dashboard">
+              <Button variant="outline" className="px-3 hidden sm:block">
+                Go to Dashboard &rarr;
+              </Button>
+            </Link>
+            <SignOutButton>
+              <Button
+                variant="btn-primary"
+                className="whitespace-nowrap text-md hover:opacity-70"
+              >
+                Log out
+              </Button>
+            </SignOutButton>
+            <ModeToggle />
+          </>
+        ) : (
+          <>
+            <Link href="/sign-in">
+              <Button variant="btn-secondary" className="px-6 hidden sm:block">
+                Login
+              </Button>
+            </Link>
+            <Link href="/sign-up">
+              <Button variant="btn-primary" className="whitespace-nowrap">
+                Sign up
+              </Button>
+            </Link>
+          </>
+        )}
+      </aside>
     </header>
   );
 };

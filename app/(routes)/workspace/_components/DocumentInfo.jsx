@@ -15,7 +15,6 @@ const DocumentInfo = ({params}) => {
   const [documentInfo, setDocumentInfo] = useState();
 
   useEffect(() => {
-    console.log(params);
     params && GetDocumentInfo();
   }, [params])
 
@@ -24,7 +23,6 @@ const DocumentInfo = ({params}) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log(docSnap.data())
       setDocumentInfo(docSnap.data())
       setEmoji(docSnap.data()?.emoji);
       docSnap.data()?.coverImage && setCoverImage(docSnap.data()?.coverImage)
@@ -67,13 +65,13 @@ const DocumentInfo = ({params}) => {
             setEmoji(emoji);
             updateDocumentInfo('emoji', emoji)
           }}>
-          <div className='bg-[#ffffffb0] p-4 rounded-md'>
+          <div className='bg-transparent p-4 rounded-md'>
             {emoji ? <span className='text-5xl'>{emoji}</span> : <SmilePlusIcon className='h-10 w-10 text-gray-500' />}
           </div>
         </EmojiPickerComponent>
       </div>
       {/* File Name  */}
-      <div className='mt-10 px-5 ml-10 p-10'>
+      <div className='mt-5 px-5 ml-10 p-10'>
         <input type="text"
           placeholder='Untitled Document'
           defaultValue={documentInfo?.documentName}

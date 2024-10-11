@@ -4,10 +4,10 @@ import Logo from "@/components/global/Logo";
 import { Button } from "@/components/ui/button";
 import { db } from "@/config/FirebaseConfig";
 import { collection, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
+import { Bell, Loader2Icon, LogOut, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
-import { useAuth, UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast"
@@ -110,7 +110,9 @@ const SideBar = ({ params }) => {
                     </div>
                 </div>
                 <div className="flex justify-end items-center gap-2">
-                    <LogOutIcon onClick={() => signOut()} />
+                    <SignOutButton>
+                        <LogOutIcon/>
+                    </SignOutButton>
                     <ModeToggle />
                 </div>
             </div>
