@@ -2,52 +2,73 @@ import React, { useEffect, useRef } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Delimiter from '@editorjs/delimiter';
-import Alert from "editorjs-alert"
+import Alert from "editorjs-alert";
 import List from '@editorjs/list';
 import CheckList from "@editorjs/checklist";
 import SimpleImage from 'simple-image-editorjs';
-import Table from '@editorjs/table'
+import Table from '@editorjs/table';
 import CodeTool from '@editorjs/code';
-import AIText from '@alkhipce/editorjs-aitext'
+import AIText from '@alkhipce/editorjs-aitext';
+import { db } from '@/config/FirebaseConfig';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { useUser } from '@clerk/nextjs';
+import { debounce } from 'lodash'; 
 
-const RichTextEditor = () => {
+const RichTextEditor = ({ params }) => {
+    const { user } = useUser();
+    const editorRef = useRef(null);
     const ref = useRef();
-    let editor;
+    let isFetched = false;
+    let skipUpdate = false; 
 
     useEffect(() => {
-        initializeEditor();
-    }, [])
+        if (user) initializeEditor();
+    }, [user]);
 
-    const SaveDocument = () => {
-        ref.current.save().then((output)=>{
-            
-        })
-    }
+    const SaveDocument = debounce(async () => {
+        if (ref.current) {
+            const outputData = await ref.current.save();
+            const docRef = doc(db, 'documentOutput', params?.documentId);
+            await updateDoc(docRef, {
+                output: outputData,
+                editedBy: user?.primaryEmailAddress?.emailAddress
+            });
+            skipUpdate = true; 
+        }
+    }, 1000);
+
+    const GetDocumentOutput = () => {
+        const unsubscribe = onSnapshot(doc(db, 'documentOutput', params?.documentId), (doc) => {
+            const output = doc.data()?.output;
+            if (!skipUpdate && output && output.blocks && Array.isArray(output.blocks)) {
+                editorRef.current.render(output); 
+            }
+            isFetched = true;
+            skipUpdate = false; 
+        });
+        return () => unsubscribe(); 
+    };
 
     const initializeEditor = () => {
-        if (!editor?.current) {
-            editor = new EditorJS({
-                onChange: (ap, event) => {
-                    SaveDocument();
+        if (!editorRef.current) {
+            const editor = new EditorJS({
+                onChange: () => {
+                    SaveDocument(); 
                 },
-                /**
-                 * Id of Element that should contain Editor instance
-                 */
+                onReady: () => {
+                    GetDocumentOutput();  
+                },
                 holder: 'editorjs',
                 tools: {
                     aiText: {
-                        // if you do not use TypeScript you need to remove "as unknown as ToolConstructable" construction
-                        // type ToolConstructable imported from @editorjs/editorjs package
                         class: AIText,
                         config: {
-                            // here you need to provide your own suggestion provider (e.g., request to your backend)
-                            // this callback function must accept a string and return a Promise<string>
                             callback: (text) => {
                                 return new Promise(resolve => {
                                     setTimeout(() => {
-                                        resolve('AI: ' + text)
-                                    }, 1000)
-                                })
+                                        resolve('AI: ' + text);
+                                    }, 1000);
+                                });
                             },
                         }
                     },
@@ -85,15 +106,16 @@ const RichTextEditor = () => {
                 },
                 placeholder: "Write anything..."
             });
-            ref.current = editor
+            editorRef.current = editor;
+            ref.current = editor;
         }
-    }
+    };
 
     return (
         <div className='px-5 ml-5'>
             <div id="editorjs"></div>
         </div>
-    )
-}
+    );
+};
 
-export default RichTextEditor
+export default RichTextEditor;

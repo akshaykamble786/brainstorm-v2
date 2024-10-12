@@ -53,7 +53,8 @@ const DocumentInfo = ({params}) => {
                 justify-center'>Change Cover</h2>
           <div className='group-hover:opacity-40'>
             <Image src={coverImage} width={400} height={400}
-              className='w-full h-[200px] object-cover '
+              className='w-full h-[200px] object-cover'
+              alt="cover image"
             />
           </div>
         </div>

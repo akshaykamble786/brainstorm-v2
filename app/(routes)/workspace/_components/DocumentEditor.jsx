@@ -10,7 +10,7 @@ const DocumentEditor = ({params}) => {
             <DocumentHeader />
             <DocumentInfo params={params} />
             {/* rich text editor */}
-            <RichTextEditor/>
+            <RichTextEditor params={params}/>
         </div>
     )
 }

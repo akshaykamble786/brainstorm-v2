@@ -23,7 +23,7 @@ const DocumentList = ({ documentList, params }) => {
             {documentList.map((doc, index) => (
                 <div
                     key={index}
-                    className={`mt-4 py-2 px-2 hover:bg-gray-900 rounded-lg cursor-pointer flex justify-between items-center ${doc.id === String(params?.documentId) ? 'bg-gray-900' : ''}`}
+                    className={`mt-2 py-2 px-1 hover:bg-gray-900 rounded-lg cursor-pointer flex justify-between items-center ${doc.id === String(params?.documentId) ? 'bg-gray-900' : ''}`}
                     onClick={() => router.push('/workspace/' + params?.workspaceId + "/" + doc.id)}
                 >
                     <div className="flex gap-2 items-center">
