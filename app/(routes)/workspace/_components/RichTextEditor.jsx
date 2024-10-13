@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Delimiter from '@editorjs/delimiter';
@@ -18,37 +18,85 @@ const RichTextEditor = ({ params }) => {
     const { user } = useUser();
     const editorRef = useRef(null);
     const ref = useRef();
+    const [isMounted, setIsMounted] = useState(false);
     let isFetched = false;
     let skipUpdate = false; 
 
     useEffect(() => {
-        if (user) initializeEditor();
-    }, [user]);
+        setIsMounted(true); 
+    }, []);
+
+    useEffect(() => {
+        if (isMounted && user) {
+            initializeEditor();
+        }
+    }, [isMounted, user]);
 
     const SaveDocument = debounce(async () => {
         if (ref.current) {
             const outputData = await ref.current.save();
+    
+            // Ensure blocks exist and is an array
+            const sanitizedOutputData = {
+                ...outputData,
+                blocks: outputData.blocks && Array.isArray(outputData.blocks)
+                    ? outputData.blocks.map(block => {
+                        if (block.type === 'table' && Array.isArray(block.data.content)) {
+                            return {
+                                ...block,
+                                data: {
+                                    ...block.data,
+                                    content: JSON.stringify(block.data.content) // Stringify only the table content
+                                }
+                            };
+                        }
+                        return block; // Keep other blocks as they are
+                    })
+                    : [] // Provide a fallback if blocks are undefined
+            };
+    
             const docRef = doc(db, 'documentOutput', params?.documentId);
             await updateDoc(docRef, {
-                output: outputData,
+                output: sanitizedOutputData, // Store sanitized output
                 editedBy: user?.primaryEmailAddress?.emailAddress
             });
-            skipUpdate = true; 
+            skipUpdate = true;
         }
     }, 1000);
-
+    
     const GetDocumentOutput = () => {
         const unsubscribe = onSnapshot(doc(db, 'documentOutput', params?.documentId), (doc) => {
             const output = doc.data()?.output;
+    
+            // Check if output and output.blocks are valid before mapping
             if (!skipUpdate && output && output.blocks && Array.isArray(output.blocks)) {
-                editorRef.current.render(output); 
+                const parsedOutput = {
+                    ...output,
+                    blocks: output.blocks.map(block => {
+                        if (block.type === 'table' && typeof block.data.content === 'string') {
+                            return {
+                                ...block,
+                                data: {
+                                    ...block.data,
+                                    content: JSON.parse(block.data.content) // Parse the stringified table content
+                                }
+                            };
+                        }
+                        return block; // Keep other blocks as they are
+                    })
+                };
+    
+                if (parsedOutput.blocks && Array.isArray(parsedOutput.blocks)) {
+                    editorRef.current.render(parsedOutput);
+                }
             }
+    
             isFetched = true;
-            skipUpdate = false; 
+            skipUpdate = false;
         });
-        return () => unsubscribe(); 
+        return () => unsubscribe();
     };
-
+    
     const initializeEditor = () => {
         if (!editorRef.current) {
             const editor = new EditorJS({
@@ -119,3 +167,4 @@ const RichTextEditor = ({ params }) => {
 };
 
 export default RichTextEditor;
+

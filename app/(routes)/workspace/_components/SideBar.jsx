@@ -15,6 +15,7 @@ import { ToastAction } from "@/components/ui/toast"
 import { ModeToggle } from "../../dashboard/_components/ModeToggle";
 import Diamond from "../../../../public/icons/diamond.svg"
 import Image from "next/image";
+import NotificationSystem from "./NotificationSystem";
 
 const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT;
 
@@ -46,7 +47,7 @@ const SideBar = ({ params }) => {
         if (documentList?.length >= MAX_FILE) {
             toast({
                 title: "Upgrade to Pro Plan",
-                description: "You reach max file limit, upgrade for unlimited file creation",
+                description: "You've reached max file limit, upgrade for unlimited file creation",
                 action: <ToastAction altText="Try again">Upgrade</ToastAction>,
             })
             return;
@@ -77,7 +78,9 @@ const SideBar = ({ params }) => {
         <div className="h-screen md:w-72 hidden md:block fixed p-5 shadow-lg border-r border-gray-200 dark:border-gray-800">
             <div className="flex justify-between items-center mb-5">
                 <Logo />
-                <Bell className="size-5 text-gray-500 cursor-pointer" />
+                <NotificationSystem>
+                    <Bell className="size-5 text-gray-500 cursor-pointer" />
+                </NotificationSystem>
             </div>
             <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
@@ -111,7 +114,7 @@ const SideBar = ({ params }) => {
                 </div>
                 <div className="flex justify-end items-center gap-2">
                     <SignOutButton>
-                        <LogOutIcon/>
+                        <LogOutIcon />
                     </SignOutButton>
                     <ModeToggle />
                 </div>

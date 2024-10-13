@@ -4,13 +4,17 @@ import CoverPicker from '@/app/_components/CoverPicker';
 import EmojiPickerComponent from '@/app/_components/EmojiPickerComponent';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ToastAction } from '@/components/ui/toast';
 import { db } from '@/config/FirebaseConfig';
+import { toast } from '@/hooks/use-toast';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { doc, setDoc } from 'firebase/firestore';
 import { Loader2Icon, SmilePlus } from 'lucide-react';
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+
+const MAX_WORKSPACE = process.env.NEXT_PUBLIC_MAX_WORKSPACE_COUNT;
 
 const CreateWorkspace = () => {
 
@@ -25,6 +29,16 @@ const CreateWorkspace = () => {
   const router = useRouter();
 
   const OnCreateWorkspace = async () => {
+
+  //   if (documentList?.length >= MAX_WORKSPACE) {
+  //     toast({
+  //         title: "Upgrade to Pro Plan",
+  //         description: "You've reached max workspace limit, upgrade for unlimited workspace creation",
+  //         action: <ToastAction altText="Try again">Upgrade</ToastAction>,
+  //     })
+  //     return;
+  // }
+
     setLoading(true);
     const workspaceId = Date.now();
     const result = await setDoc(doc(db, 'Workspace', workspaceId.toString()),{

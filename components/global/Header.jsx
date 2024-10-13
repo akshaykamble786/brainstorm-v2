@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import Logo from "./Logo";
-import { SignedIn, SignedOut, SignInButton, SignOutButton, useAuth } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignOutButton, useAuth, UserButton } from "@clerk/nextjs";
 import { ModeToggle } from "@/app/(routes)/dashboard/_components/ModeToggle";
 
 const routes = [
@@ -220,6 +220,7 @@ const Header = () => {
                 Log out
               </Button>
             </SignOutButton>
+            <UserButton/>
             <ModeToggle />
           </>
         ) : (
