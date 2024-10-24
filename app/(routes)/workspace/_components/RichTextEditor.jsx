@@ -13,6 +13,7 @@ import { db } from '@/config/FirebaseConfig';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/nextjs';
 import { debounce } from 'lodash'; 
+import GenerateContent from './GenerateContent';
 
 const RichTextEditor = ({ params }) => {
     const { user } = useUser();
@@ -161,7 +162,10 @@ const RichTextEditor = ({ params }) => {
 
     return (
         <div className='px-5 ml-5'>
-            <div id="editorjs"></div>
+            <div id="editorjs" className='w-[70%]'></div>
+            <div className='fixed bottom-5 md:ml-80 left-0 z-10'>
+                <GenerateContent setGenerateContent={(output)=>editorRef.current.render(output)}/>
+            </div>
         </div>
     );
 };
