@@ -12,19 +12,23 @@ import AIText from '@alkhipce/editorjs-aitext';
 import { db } from '@/config/FirebaseConfig';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useUser } from '@clerk/nextjs';
-import { debounce } from 'lodash'; 
+import { debounce } from 'lodash';
 import GenerateContent from './GenerateContent';
+import ChatWithDocument from './ChatWithDocument';
+import TranslateDocument from './TranslateDocument';
 
 const RichTextEditor = ({ params }) => {
     const { user } = useUser();
     const editorRef = useRef(null);
     const ref = useRef();
     const [isMounted, setIsMounted] = useState(false);
+    const [currentDocumentContent, setCurrentDocumentContent] = useState(null);
+
     let isFetched = false;
-    let skipUpdate = false; 
+    let skipUpdate = false;
 
     useEffect(() => {
-        setIsMounted(true); 
+        setIsMounted(true);
     }, []);
 
     useEffect(() => {
@@ -36,8 +40,7 @@ const RichTextEditor = ({ params }) => {
     const SaveDocument = debounce(async () => {
         if (ref.current) {
             const outputData = await ref.current.save();
-    
-            // Ensure blocks exist and is an array
+            setCurrentDocumentContent(outputData);
             const sanitizedOutputData = {
                 ...outputData,
                 blocks: outputData.blocks && Array.isArray(outputData.blocks)
@@ -47,29 +50,28 @@ const RichTextEditor = ({ params }) => {
                                 ...block,
                                 data: {
                                     ...block.data,
-                                    content: JSON.stringify(block.data.content) // Stringify only the table content
+                                    content: JSON.stringify(block.data.content)
                                 }
                             };
                         }
-                        return block; // Keep other blocks as they are
+                        return block;
                     })
-                    : [] // Provide a fallback if blocks are undefined
+                    : []
             };
-    
+
             const docRef = doc(db, 'documentOutput', params?.documentId);
             await updateDoc(docRef, {
-                output: sanitizedOutputData, // Store sanitized output
+                output: sanitizedOutputData,
                 editedBy: user?.primaryEmailAddress?.emailAddress
             });
             skipUpdate = true;
         }
     }, 1000);
-    
+
     const GetDocumentOutput = () => {
         const unsubscribe = onSnapshot(doc(db, 'documentOutput', params?.documentId), (doc) => {
             const output = doc.data()?.output;
-    
-            // Check if output and output.blocks are valid before mapping
+
             if (!skipUpdate && output && output.blocks && Array.isArray(output.blocks)) {
                 const parsedOutput = {
                     ...output,
@@ -79,33 +81,34 @@ const RichTextEditor = ({ params }) => {
                                 ...block,
                                 data: {
                                     ...block.data,
-                                    content: JSON.parse(block.data.content) // Parse the stringified table content
+                                    content: JSON.parse(block.data.content)
                                 }
                             };
                         }
-                        return block; // Keep other blocks as they are
+                        return block;
                     })
                 };
-    
+
                 if (parsedOutput.blocks && Array.isArray(parsedOutput.blocks)) {
                     editorRef.current.render(parsedOutput);
+                    setCurrentDocumentContent(parsedOutput);
                 }
             }
-    
+
             isFetched = true;
             skipUpdate = false;
         });
         return () => unsubscribe();
     };
-    
+
     const initializeEditor = () => {
         if (!editorRef.current) {
             const editor = new EditorJS({
                 onChange: () => {
-                    SaveDocument(); 
+                    SaveDocument();
                 },
                 onReady: () => {
-                    GetDocumentOutput();  
+                    GetDocumentOutput();
                 },
                 holder: 'editorjs',
                 tools: {
@@ -163,9 +166,12 @@ const RichTextEditor = ({ params }) => {
     return (
         <div className='px-5 ml-5'>
             <div id="editorjs" className='w-[70%]'></div>
-            <div className='fixed bottom-5 md:ml-80 left-0 z-10'>
-                <GenerateContent setGenerateContent={(output)=>editorRef.current.render(output)}/>
+            <div className='fixed top-1/2 right-5 flex gap-2 z-50 -translate-y-1/2'>
+                <GenerateContent setGenerateContent={(output) => editorRef.current.render(output)} />
+                <ChatWithDocument documentContent={currentDocumentContent} />
+                <TranslateDocument />
             </div>
+
         </div>
     );
 };

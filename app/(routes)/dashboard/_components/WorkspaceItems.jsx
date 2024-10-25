@@ -7,13 +7,13 @@ import React from 'react'
 function WorkspaceItems({workspaceList}) {
   const router=useRouter();
 
-  const OnClickWorkspaceItem = (workspaceId) => {
-      router.push('/workspace/'+workspaceId)
+  const OnClickWorkspaceItem = (workspaceId, documentId) => {
+      router.push('/workspace/'+workspaceId+"/"+documentId)
   }
 
   return (
     <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6'>
-        {workspaceList && workspaceList.map((workspace,index)=>(
+        {workspaceList && workspaceList.map((workspace, index)=>(
             <div key={index} className='border shadow-xl rounded-xl
             hover:scale-105 transition-all cursor-pointer'
             onClick={()=>OnClickWorkspaceItem(workspace.id)}

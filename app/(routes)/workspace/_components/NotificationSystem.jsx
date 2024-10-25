@@ -25,9 +25,9 @@ const NotificationSystem = ({ children }) => {
     return (
         <Popover>
             <PopoverTrigger>
-                <div className='flex gap-1'>
+                <div className='flex gap-1 relative'>
                 {children}
-                <span className='p-1 px-1 -ml-3 rounded-full text-[10px] bg-primary text-white'>{count}</span>
+                <span className='absolute right-[-5px] top-[-5px] w-4 text-center leading-4 bg-primary text-white aspect-square rounded-full text-xs'>{count}</span>
                 </div>
             </PopoverTrigger>
             <PopoverContent className={"w-[500px]"}>
