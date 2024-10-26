@@ -23,45 +23,37 @@ const ChatWithDocument = ({ documentContent }) => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistory]);
 
-  const extractTextFromResponse = (jsonResponse) => {
+  const extractTextFromResponse = (response) => {
     try {
-      const parsed = JSON.parse(jsonResponse);
-      
-      if (parsed.answer) {
-        return parsed.answer;
-      }
-      
-      if (parsed.data?.text) {
-        return parsed.data.text;
-      } else if (parsed.blocks) {
-        return parsed.blocks
-          .map(block => {
-            if (block.type === 'paragraph') {
-              return block.data?.text || '';
-            } else if (block.type === 'checklist') {
-              return block.data?.items
-                ?.map(item => item.text)
-                .filter(Boolean)
-                .join(', ');
-            }
-            return '';
-          })
-          .filter(Boolean)
-          .join('\n');
-      }
-      
-      return JSON.stringify(parsed, null, 2);
+      const parsed = JSON.parse(response);
+      return parsed.answer || parsed.content || JSON.stringify(parsed, null, 2);
     } catch (error) {
-      console.error('Error parsing JSON response:', error);
-      return jsonResponse;
+      return response;
+    }
+  };
+
+  const formatDocumentContent = (content) => {
+    if (typeof content === 'string') {
+      return content;
+    }
+    try {
+      if (Array.isArray(content)) {
+        return content.map(doc => {
+          if (typeof doc === 'string') return doc;
+          return JSON.stringify(doc, null, 2);
+        }).join('\n\n');
+      }
+      return JSON.stringify(content, null, 2);
+    } catch (error) {
+      return String(content);
     }
   };
 
   const handleChatSubmit = async (e) => {
     e?.preventDefault();
-    
+
     if (!userQuery.trim() || loading) return;
-    
+
     setLoading(true);
     const currentQuery = userQuery;
     setUserQuery('');
@@ -69,11 +61,23 @@ const ChatWithDocument = ({ documentContent }) => {
     setChatHistory(prev => [...prev, { type: 'user', content: currentQuery }]);
 
     try {
-      const formattedQuery = `Based on this document content: ${JSON.stringify(documentContent)}\n\nUser Question: ${currentQuery}\n\nPlease provide a clear and relevant answer based on the document content.`;
+      const formattedContent = formatDocumentContent(documentContent);
+      const formattedQuery = `
+Context: Here is the document content to analyze:
+
+${formattedContent}
+
+Question: ${currentQuery}
+
+Please provide your answer in the following JSON format:
+{
+  "answer": "Your detailed answer here",
+  "content": "Any additional content or explanations"
+}
+`;
 
       const result = await chatSession.sendMessage(formattedQuery);
       const responseText = await result.response.text();
-      
       const formattedResponse = extractTextFromResponse(responseText);
 
       setChatHistory(prev => [...prev, {
@@ -81,7 +85,6 @@ const ChatWithDocument = ({ documentContent }) => {
         content: formattedResponse
       }]);
     } catch (error) {
-      console.error("Chat response failed: ", error);
       setChatHistory(prev => [...prev, {
         type: 'error',
         content: 'Sorry, there was an error processing your request. Please try again.'
@@ -104,7 +107,7 @@ const ChatWithDocument = ({ documentContent }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button className="flex gap-2 text-sm" onClick={() => setOpen(true)}>
-              <MessageCircle className="size-4" />
+              <MessageCircle className="size-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -128,13 +131,12 @@ const ChatWithDocument = ({ documentContent }) => {
                     className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                   >
                     <div
-                      className={`max-w-[80%] p-3 rounded-lg ${
-                        message.type === 'user'
+                      className={`max-w-[80%] p-3 rounded-lg ${message.type === 'user'
                           ? 'bg-primary text-primary-foreground ml-4'
                           : message.type === 'error'
-                          ? 'bg-destructive text-destructive-foreground'
-                          : 'bg-muted'
-                      }`}
+                            ? 'bg-destructive text-destructive-foreground'
+                            : 'bg-muted'
+                        }`}
                     >
                       {message.content}
                     </div>

@@ -16,16 +16,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={twMerge('bg-background', inter.className)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-        >
-          <ClerkProvider>
-            <Toaster/>
-            {children}
-          </ClerkProvider>
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+          >
+            <ClerkProvider>
+              <Toaster />
+              {children}
+            </ClerkProvider>
+          </ThemeProvider>
       </body>
     </html>
   );

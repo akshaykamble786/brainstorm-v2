@@ -1,4 +1,4 @@
-import { Link2Icon, MoreVertical, PenBox, Trash2 } from 'lucide-react'
+import { Heart, Link2Icon, MoreVertical, PenBox, Trash2 } from 'lucide-react'
 import React from 'react';
 import {
     DropdownMenu,
@@ -24,7 +24,7 @@ const DocumentOptions = ({doc, deleteDocument}) => {
                         <PenBox className='size-4' /> Rename
                     </DropdownMenuItem>
                     <DropdownMenuItem className="gap-2 flex">
-                        <PenBox className='size-4' /> Add to favorites
+                        <Heart className='size-4' /> Add to favorites
                     </DropdownMenuItem>
                     <DropdownMenuItem className="gap-2 flex text-red-500" onClick={() => deleteDocument(doc?.id)}>
                         <Trash2 className='size-4' /> Move to trash

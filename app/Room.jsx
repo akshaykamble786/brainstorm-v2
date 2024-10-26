@@ -19,7 +19,6 @@ export function Room({ children, params }) {
         const userList = [];
 
         querySnapshot.forEach((doc) => {
-          console.log(doc.data());
           userList.push(doc.data())
         });
         return userList;

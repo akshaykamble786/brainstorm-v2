@@ -13,7 +13,6 @@ const Header = () => {
 
   
   useEffect(()=>{
-    console.log(user);
     user && saveUserData();
   },[user])
 

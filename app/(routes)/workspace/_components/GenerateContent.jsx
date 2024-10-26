@@ -140,7 +140,7 @@ const GenerateContent = ({ setGenerateContent }) => {
                 setUserInput('');
               }}
             >
-              <WandSparkles className="size-4" />
+              <WandSparkles className="size-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

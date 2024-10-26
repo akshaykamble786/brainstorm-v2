@@ -3,8 +3,8 @@
 import Logo from "@/components/global/Logo";
 import { Button } from "@/components/ui/button";
 import { db } from "@/config/FirebaseConfig";
-import { collection, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { Bell, Loader2Icon, LogOut, LogOutIcon } from "lucide-react";
+import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from "firebase/firestore";
+import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
 import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/nextjs";
@@ -22,6 +22,7 @@ const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT;
 const SideBar = ({ params }) => {
     const [documentList, setDocumentList] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [workspaceName, setWorkspaceName] = useState('Loading...');
 
     const { user } = useUser();
     const router = useRouter();
@@ -29,6 +30,10 @@ const SideBar = ({ params }) => {
 
     useEffect(() => {
         params && GetDocumentList();
+    }, [params])
+
+    useEffect(() => {
+        params && GetWorkspaceList();
     }, [params])
 
     const GetDocumentList = () => {
@@ -41,6 +46,23 @@ const SideBar = ({ params }) => {
             })
         })
     }
+
+    const GetWorkspaceList = async () => {
+        try {
+          const workspaceCollection = collection(db, 'Workspace');
+          const workspaceSnapshot = await getDocs(workspaceCollection);
+          
+          if (!workspaceSnapshot.empty) {
+            const workspaceData = workspaceSnapshot.docs[0].data();
+            setWorkspaceName(workspaceData.workspaceName);
+          } else {
+            setWorkspaceName('No Workspace Found');
+          }
+        } catch (error) {
+          console.error('Error fetching workspace:', error);
+          setWorkspaceName('Error Loading Workspace');
+        }
+      };
 
     const CreateNewDocument = async () => {
 
@@ -62,7 +84,6 @@ const SideBar = ({ params }) => {
             emoji: null,
             id: docId,
             documentName: "Untitled Document",
-            documentOutput: []
         });
 
         await setDoc(doc(db, 'documentOutput', docId.toString()), {
@@ -96,7 +117,7 @@ const SideBar = ({ params }) => {
             <hr className="my-4"></hr>
 
             <div className="flex justify-between items-center">
-                <h2>Test Workspace</h2>
+                <h1 className="font-semibold text-lg">{workspaceName}</h1>
                 <Button size="sm" onClick={CreateNewDocument}>
                     {loading ? <Loader2Icon className="size-4 animate-spin" /> : "+"}
                 </Button>

@@ -58,7 +58,6 @@ const CreateWorkspace = () => {
       emoji : null,
       id: docId,
       documentName : "Untitled Document",
-      documentOutput: []
     });
 
     await setDoc(doc(db,'documentOutput',docId.toString()),{

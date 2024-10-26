@@ -81,7 +81,7 @@ const TranslateDocument = ({ documentContent }) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button className="flex gap-2 text-sm" onClick={() => setOpen(true)}>
-              <Languages className="size-4" />
+              <Languages className="size-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

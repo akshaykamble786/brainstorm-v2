@@ -205,7 +205,7 @@ const HomePage = () => {
                   ) : (
                     ""
                   )}
-                  <Button variant="btn-primary" className="whitespace-nowrap w-full mt-4">
+                  <Button variant="default" className="whitespace-nowrap w-full mt-4 text-sm">
                     {card.planType === PRICING_PLANS.proplan
                       ? "Go Pro"
                       : "Get Started"}
