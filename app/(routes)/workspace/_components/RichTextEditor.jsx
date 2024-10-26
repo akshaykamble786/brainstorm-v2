@@ -23,6 +23,7 @@ const RichTextEditor = ({ params }) => {
     const ref = useRef();
     const [isMounted, setIsMounted] = useState(false);
     const [currentDocumentContent, setCurrentDocumentContent] = useState(null);
+    const [plainTextContent, setPlainTextContent] = useState('');
 
     let isFetched = false;
     let skipUpdate = false;
@@ -37,10 +38,40 @@ const RichTextEditor = ({ params }) => {
         }
     }, [isMounted, user]);
 
+    const getPlainText = (blocks) => {
+        if (!blocks) return '';
+        
+        return blocks.map(block => {
+            switch (block.type) {
+                case 'paragraph':
+                    return block.data.text;
+                case 'header':
+                    return block.data.text;
+                case 'list':
+                    return block.data.items.join('\n');
+                case 'checklist':
+                    return block.data.items.map(item => item.text).join('\n');
+                case 'table':
+                    const content = Array.isArray(block.data.content) 
+                        ? block.data.content 
+                        : JSON.parse(block.data.content);
+                    return content.map(row => row.join('\t')).join('\n');
+                case 'code':
+                    return block.data.code;
+                case 'alert':
+                    return block.data.message;
+                default:
+                    return '';
+            }
+        }).filter(text => text).join('\n\n');
+    };
+
     const SaveDocument = debounce(async () => {
         if (ref.current) {
             const outputData = await ref.current.save();
             setCurrentDocumentContent(outputData);
+            setPlainTextContent(getPlainText(outputData.blocks));
+
             const sanitizedOutputData = {
                 ...outputData,
                 blocks: outputData.blocks && Array.isArray(outputData.blocks)
@@ -92,6 +123,7 @@ const RichTextEditor = ({ params }) => {
                 if (parsedOutput.blocks && Array.isArray(parsedOutput.blocks)) {
                     editorRef.current.render(parsedOutput);
                     setCurrentDocumentContent(parsedOutput);
+                    setPlainTextContent(getPlainText(parsedOutput.blocks));
                 }
             }
 
@@ -166,15 +198,13 @@ const RichTextEditor = ({ params }) => {
     return (
         <div className='px-5 ml-5'>
             <div id="editorjs" className='w-[70%]'></div>
-            <div className='fixed top-1/2 right-5 flex gap-2 z-50 -translate-y-1/2'>
+            <div className='fixed flex flex-col right-5 bottom-[70px] gap-2 z-50'>
                 <GenerateContent setGenerateContent={(output) => editorRef.current.render(output)} />
                 <ChatWithDocument documentContent={currentDocumentContent} />
-                <TranslateDocument />
+                <TranslateDocument documentContent={plainTextContent} />
             </div>
-
         </div>
     );
 };
 
 export default RichTextEditor;
-

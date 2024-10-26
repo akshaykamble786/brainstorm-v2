@@ -8,7 +8,7 @@ const DocumentHeader = () => {
             <div></div>
             <OrganizationSwitcher/>
             <div>
-                <Button className="text-sm rounded-lg h-10">Share</Button>
+                <Button className="text-sm rounded-lg h-10">Publish</Button>
             </div>
         </div>
     )

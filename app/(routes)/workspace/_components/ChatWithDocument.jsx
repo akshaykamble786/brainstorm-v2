@@ -5,6 +5,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { chatSession } from '@/config/GoogleAIModel';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const ChatWithDocument = ({ documentContent }) => {
   const [open, setOpen] = useState(false);
@@ -20,6 +26,10 @@ const ChatWithDocument = ({ documentContent }) => {
   const extractTextFromResponse = (jsonResponse) => {
     try {
       const parsed = JSON.parse(jsonResponse);
+      
+      if (parsed.answer) {
+        return parsed.answer;
+      }
       
       if (parsed.data?.text) {
         return parsed.data.text;
@@ -39,10 +49,11 @@ const ChatWithDocument = ({ documentContent }) => {
           .filter(Boolean)
           .join('\n');
       }
+      
       return JSON.stringify(parsed, null, 2);
     } catch (error) {
       console.error('Error parsing JSON response:', error);
-      return jsonResponse; 
+      return jsonResponse;
     }
   };
 
@@ -89,40 +100,51 @@ const ChatWithDocument = ({ documentContent }) => {
 
   return (
     <div>
-      <Button onClick={() => setOpen(true)} className="flex items-center gap-2 text-sm">
-        <MessageCircle className="w-4 h-4" /> Chat with Document
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button className="flex gap-2 text-sm" onClick={() => setOpen(true)}>
+              <MessageCircle className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span>Chat with Document</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl h-[80vh]">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl max-h-[80vh] p-0">
+          <DialogHeader className="p-6 pb-0">
             <DialogTitle>Chat with Document</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col h-full">
-            <ScrollArea className="flex-1 p-4 space-y-4 mb-4">
-              {chatHistory.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
-                >
+          <div className="flex flex-col h-[calc(80vh-8rem)]">
+            <ScrollArea className="flex-1 px-6">
+              <div className="space-y-4 mb-4">
+                {chatHistory.map((message, index) => (
                   <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      message.type === 'user'
-                        ? 'bg-primary text-primary-foreground ml-4'
-                        : message.type === 'error'
-                        ? 'bg-destructive text-destructive-foreground'
-                        : 'bg-muted'
-                    }`}
+                    key={index}
+                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
                   >
-                    {message.content}
+                    <div
+                      className={`max-w-[80%] p-3 rounded-lg ${
+                        message.type === 'user'
+                          ? 'bg-primary text-primary-foreground ml-4'
+                          : message.type === 'error'
+                          ? 'bg-destructive text-destructive-foreground'
+                          : 'bg-muted'
+                      }`}
+                    >
+                      {message.content}
+                    </div>
                   </div>
-                </div>
-              ))}
-              <div ref={chatEndRef} />
+                ))}
+                <div ref={chatEndRef} />
+              </div>
             </ScrollArea>
 
-            <form onSubmit={handleChatSubmit} className="flex items-center gap-2 p-4 border-t">
+            <form onSubmit={handleChatSubmit} className="flex items-center gap-2 p-4 border-t bg-background">
               <Input
                 placeholder="Ask something about the document..."
                 value={userQuery}

@@ -5,9 +5,9 @@ import {
   RoomProvider,
   ClientSideSuspense,
 } from "@liveblocks/react/suspense";
-import { Loader2Icon } from "lucide-react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
+import WorkspaceLoader from "./(routes)/workspace/_components/WorkspaceLoader";
 
 export function Room({ children, params }) {
   return (
@@ -41,7 +41,7 @@ export function Room({ children, params }) {
       }}
       >
       <RoomProvider id={params?.documentId?params?.documentId:'1'}>
-        <ClientSideSuspense fallback={<div className="h-96 w-96 flex items-center justify-center"><Loader2Icon className="animate-spin" /></div>}>
+        <ClientSideSuspense fallback={<div className="h-96 w-96 flex items-center justify-center"><WorkspaceLoader className="m-96 animate-pulse flex justify-center items-center" /></div>}>
           {children}
         </ClientSideSuspense>
       </RoomProvider>

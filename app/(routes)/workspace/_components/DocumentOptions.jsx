@@ -23,8 +23,11 @@ const DocumentOptions = ({doc, deleteDocument}) => {
                     <DropdownMenuItem className="gap-2 flex">
                         <PenBox className='size-4' /> Rename
                     </DropdownMenuItem>
+                    <DropdownMenuItem className="gap-2 flex">
+                        <PenBox className='size-4' /> Add to favorites
+                    </DropdownMenuItem>
                     <DropdownMenuItem className="gap-2 flex text-red-500" onClick={() => deleteDocument(doc?.id)}>
-                        <Trash2 className='size-4' /> Delete
+                        <Trash2 className='size-4' /> Move to trash
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
