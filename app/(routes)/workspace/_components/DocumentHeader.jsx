@@ -1,28 +1,29 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { OrganizationSwitcher } from "@clerk/nextjs";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Badge } from "@/components/ui/badge"
 import React, { useState } from "react";
 import DynamicBreadcrumb from "./CustomBreadcrumb";
+import InviteCollaborator from "./InviteCollaborator";
 
-const DocumentHeader = ({ workspaceName, onCreateDocument }) => {
-    const [loading, setLoading] = useState(false);
-
+const DocumentHeader = ({ workspaceName }) => {
+    const [saving, setSaving] = useState(false);
+    
     return (
-        <div className="flex items-center justify-between px-6 py-3 border-b">
+        <div className="sticky flex items-center justify-between p-4 border-b">
             <div className="flex flex-col gap-2">
-                <DynamicBreadcrumb workspaceName={workspaceName} />
+                <DynamicBreadcrumb />
                 <h2 className="text-lg font-semibold">{workspaceName}</h2>
             </div>
 
-            <div className="flex items-center gap-2">
-                <OrganizationSwitcher />
-                <Button
-                    className="h-10 px-4 text-sm font-medium rounded-lg"
-                    disabled={loading}
-                >
-                    Publish
-                </Button>
+            <div className="flex items-center gap-4">
+                {/* <OrganizationSwitcher /> */}
+                <InviteCollaborator/>
+                {saving ?
+                    <Badge variant="secondary" className="bg-orange-600">Saving...</Badge>
+                    : <Badge variant="secondary" className="bg-emerald-600">Saved</Badge>
+                }
             </div>
         </div>
     )

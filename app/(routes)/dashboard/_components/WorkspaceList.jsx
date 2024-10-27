@@ -42,11 +42,6 @@ const WorkspaceList = () => {
                 <div className=''>
                     <h2 className='font-medium text-primary'>Workspaces</h2>
                 </div>
-
-                <div className='flex gap-2'>
-                    <LayoutGrid />
-                    <AlignLeft />
-                </div>
             </div>
 
             {workspaceList?.length == 0 ?

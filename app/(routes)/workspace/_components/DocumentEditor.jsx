@@ -13,8 +13,8 @@ const DocumentEditor = ({ params }) => {
     return (
         <div className="relative">
             {/* Header */}
-            <DocumentHeader />
-            <DocumentInfo params={params} />
+            <DocumentHeader /> 
+                       <DocumentInfo params={params} />
             {/* rich text editor */}
             <div className="grid grid-cols-4">
 

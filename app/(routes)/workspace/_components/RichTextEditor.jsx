@@ -40,7 +40,7 @@ const RichTextEditor = ({ params }) => {
 
     const getPlainText = (blocks) => {
         if (!blocks) return '';
-        
+
         return blocks.map(block => {
             switch (block.type) {
                 case 'paragraph':
@@ -52,8 +52,8 @@ const RichTextEditor = ({ params }) => {
                 case 'checklist':
                     return block.data.items.map(item => item.text).join('\n');
                 case 'table':
-                    const content = Array.isArray(block.data.content) 
-                        ? block.data.content 
+                    const content = Array.isArray(block.data.content)
+                        ? block.data.content
                         : JSON.parse(block.data.content);
                     return content.map(row => row.join('\t')).join('\n');
                 case 'code':

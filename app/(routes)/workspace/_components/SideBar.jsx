@@ -3,11 +3,11 @@
 import Logo from "@/components/global/Logo";
 import { Button } from "@/components/ui/button";
 import { db } from "@/config/FirebaseConfig";
-import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot, query, where, getDoc } from "firebase/firestore";
 import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
-import { SignOutButton, useAuth, UserButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast"
@@ -22,19 +22,34 @@ const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT;
 const SideBar = ({ params }) => {
     const [documentList, setDocumentList] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [workspaceName, setWorkspaceName] = useState('Loading...');
+    const [workspaceName, setWorkspaceName] = useState("Loading...");
 
     const { user } = useUser();
     const router = useRouter();
     const { toast } = useToast()
 
     useEffect(() => {
-        params && GetDocumentList();
-    }, [params])
+        if (params) {
+            GetDocumentList();
+            GetWorkspaceName();
+        }
+    }, [params]);
 
-    useEffect(() => {
-        params && GetWorkspaceList();
-    }, [params])
+    const GetWorkspaceName = async () => {
+        try {
+            const workspaceRef = doc(db, 'Workspace', params?.workspaceId.toString());
+            const workspaceSnap = await getDoc(workspaceRef);
+            
+            if (workspaceSnap.exists()) {
+                setWorkspaceName(workspaceSnap.data().workspaceName);
+            } else {
+                setWorkspaceName("Untitled Workspace");
+            }
+        } catch (error) {
+            console.error("Error fetching workspace name:", error);
+            setWorkspaceName("Error loading workspace");
+        }
+    };
 
     const GetDocumentList = () => {
         const q = query(collection(db, 'workspaceDocuments'), where('workspaceId', '==', Number(params?.workspaceId)));
@@ -47,25 +62,7 @@ const SideBar = ({ params }) => {
         })
     }
 
-    const GetWorkspaceList = async () => {
-        try {
-          const workspaceCollection = collection(db, 'Workspace');
-          const workspaceSnapshot = await getDocs(workspaceCollection);
-          
-          if (!workspaceSnapshot.empty) {
-            const workspaceData = workspaceSnapshot.docs[0].data();
-            setWorkspaceName(workspaceData.workspaceName);
-          } else {
-            setWorkspaceName('No Workspace Found');
-          }
-        } catch (error) {
-          console.error('Error fetching workspace:', error);
-          setWorkspaceName('Error Loading Workspace');
-        }
-      };
-
     const CreateNewDocument = async () => {
-
         if (documentList?.length >= MAX_FILE) {
             toast({
                 title: "Upgrade to Pro Plan",
@@ -117,7 +114,7 @@ const SideBar = ({ params }) => {
             <hr className="my-4"></hr>
 
             <div className="flex justify-between items-center">
-                <h1 className="font-semibold text-lg">{workspaceName}</h1>
+                <h1 className="font-semibold text-sm">{workspaceName.toUpperCase()}</h1>
                 <Button size="sm" onClick={CreateNewDocument}>
                     {loading ? <Loader2Icon className="size-4 animate-spin" /> : "+"}
                 </Button>
