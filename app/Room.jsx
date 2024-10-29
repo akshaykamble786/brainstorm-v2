@@ -8,11 +8,13 @@ import {
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import WorkspaceLoader from "./(routes)/workspace/_components/WorkspaceLoader";
+import LiveCursorProvider from "@/components/ui/LiveCursorProvider";
 
 export function Room({ children, params }) {
   return (
     <LiveblocksProvider
-      authEndpoint={"/api/liveblocks-auth?roomId="+params?.documentId}
+      throttle={32}
+      authEndpoint={"/api/liveblocks-auth?roomId=" + params?.documentId}
       resolveUsers={async ({ userIds }) => {
         const q = query(collection(db, 'users'), where('email', 'in', userIds))
         const querySnapshot = await getDocs(q);
@@ -38,10 +40,17 @@ export function Room({ children, params }) {
 
         return userList.map((user) => user.id);
       }}
+    >
+      <RoomProvider
+        id={params?.documentId ? params?.documentId : '1'}
+        initialPresence={{
+          cursor: null
+        }}
       >
-      <RoomProvider id={params?.documentId?params?.documentId:'1'}>
         <ClientSideSuspense fallback={<div className="h-96 w-96 flex items-center justify-center"><WorkspaceLoader className="m-96 animate-pulse flex justify-center items-center" /></div>}>
-          {children}
+          <LiveCursorProvider>
+            {children}
+          </LiveCursorProvider>
         </ClientSideSuspense>
       </RoomProvider>
     </LiveblocksProvider>

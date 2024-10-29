@@ -89,7 +89,7 @@ const DynamicBreadcrumb = () => {
             <BreadcrumbList>
                 <BreadcrumbItem>
                     <Link href="/" passHref legacyBehavior>
-                        <BreadcrumbLink className="flex items-center">
+                        <BreadcrumbLink className="flex items-center text-md">
                             Home
                         </BreadcrumbLink>
                     </Link>
@@ -98,7 +98,7 @@ const DynamicBreadcrumb = () => {
                 {pathSegments.map((item, index) => (
                     <React.Fragment key={item.path}>
                         <BreadcrumbSeparator />
-                        <BreadcrumbItem>
+                        <BreadcrumbItem className="text-md">
                             {index === pathSegments.length - 1 ? (
                                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
                             ) : (

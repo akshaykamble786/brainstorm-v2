@@ -4,8 +4,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -14,7 +12,7 @@ const DocumentOptions = ({doc, deleteDocument}) => {
         <div>
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <MoreVertical className='size-4' />
+                    <MoreVertical className='size-4 hidden hover:block' />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem className="gap-2 flex">
