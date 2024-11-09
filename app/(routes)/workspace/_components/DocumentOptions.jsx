@@ -12,7 +12,7 @@ const DocumentOptions = ({doc, deleteDocument}) => {
         <div>
             <DropdownMenu>
                 <DropdownMenuTrigger>
-                    <MoreVertical className='size-4 hidden hover:block' />
+                    <MoreVertical className='size-4' />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem className="gap-2 flex">

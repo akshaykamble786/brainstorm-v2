@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/lib/providers/ThemeProvider";
 import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import "@liveblocks/react-ui/styles.css";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,16 +17,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={twMerge('bg-background', inter.className)}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-          >
-            <ClerkProvider>
+        <ClerkProvider>
+          <EdgeStoreProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+            >
               <Toaster />
               {children}
-            </ClerkProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </EdgeStoreProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

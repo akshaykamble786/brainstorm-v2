@@ -21,7 +21,7 @@ const WorkspaceList = () => {
 
     const getWorkspaceList = async () => {
         setWorkspaceList([]);
-        const q = query(collection(db,'Workspace'), where('orgId','==',orgId ? orgId : user?.primaryEmailAddress?.emailAddress));
+        const q = query(collection(db,'workspaces'), where('orgId','==',orgId ? orgId : user?.primaryEmailAddress?.emailAddress));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc)=>{

@@ -9,6 +9,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import WorkspaceLoader from "./(routes)/workspace/_components/WorkspaceLoader";
 import LiveCursorProvider from "@/components/ui/LiveCursorProvider";
+import { Loader2Icon } from "lucide-react";
 
 export function Room({ children, params }) {
   return (
@@ -47,7 +48,7 @@ export function Room({ children, params }) {
           cursor: null
         }}
       >
-        <ClientSideSuspense fallback={<div className="h-96 w-96 flex items-center justify-center"><WorkspaceLoader className="m-96 animate-pulse flex justify-center items-center" /></div>}>
+        <ClientSideSuspense fallback={<Loader2Icon className="animate-spin"/>}>
           <LiveCursorProvider>
             {children}
           </LiveCursorProvider>

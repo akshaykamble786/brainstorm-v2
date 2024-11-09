@@ -16,7 +16,7 @@ function WorkspaceItems({workspaceList}) {
       
       for (const workspace of workspaceList) {
         const q = query(
-          collection(db, 'workspaceDocuments'),
+          collection(db, 'documents'),
           where('workspaceId', '==', workspace.id),
           limit(1)
         );

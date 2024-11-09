@@ -28,32 +28,25 @@ const CreateWorkspace = () => {
   
   const router = useRouter();
 
-  const OnCreateWorkspace = async () => {
-
-  //   if (documentList?.length >= MAX_WORKSPACE) {
-  //     toast({
-  //         title: "Upgrade to Pro Plan",
-  //         description: "You've reached max workspace limit, upgrade for unlimited workspace creation",
-  //         action: <ToastAction altText="Try again">Upgrade</ToastAction>,
-  //     })
-  //     return;
-  // }
-
+  const OnCreateWorkspace = async () => { 
+    
     setLoading(true);
     const workspaceId = Date.now();
-    const result = await setDoc(doc(db, 'Workspace', workspaceId.toString()),{
+    const result = await setDoc(doc(db,'workspaces', workspaceId.toString()),{
         workspaceName : workspaceName,
         emoji : emoji,
         coverImage : coverImage,
         createdBy : user?.primaryEmailAddress?.emailAddress,
+        createdAt : new Date(),
         id : workspaceId,
         orgId : orgId ? orgId : user?.primaryEmailAddress?.emailAddress
     });
 
     const docId = crypto.randomUUID();
-    await setDoc(doc(db,'workspaceDocuments',docId.toString()),{
+    await setDoc(doc(db,'documents',docId.toString()),{
       workspaceId : workspaceId,
       createdBy : user?.primaryEmailAddress?.emailAddress,
+      createdAt : new Date(),
       coverImage : null,
       emoji : null,
       id: docId,

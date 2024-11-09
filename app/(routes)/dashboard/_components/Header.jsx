@@ -22,7 +22,8 @@ const Header = () => {
       await setDoc(doc(db,'users',docId), {
         name: user?.fullName,
         avatar: user?.imageUrl,
-        email: user?.primaryEmailAddress?.emailAddress
+        email: user?.primaryEmailAddress?.emailAddress,
+        subscriptionStatus : false
       })
     } catch (e) {
       console.log("user not saved")

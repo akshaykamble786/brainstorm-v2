@@ -3,7 +3,7 @@
 import Logo from "@/components/global/Logo";
 import { Button } from "@/components/ui/button";
 import { db } from "@/config/FirebaseConfig";
-import { collection, doc, getDocs, onSnapshot, query, where, getDoc } from "firebase/firestore";
+import { collection, doc, getDocs, onSnapshot, query, where, getDoc, setDoc } from "firebase/firestore";
 import { Bell, Loader2Icon, LogOutIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import DocumentList from "./DocumentList";
@@ -37,7 +37,7 @@ const SideBar = ({ params }) => {
 
     const GetWorkspaceName = async () => {
         try {
-            const workspaceRef = doc(db, 'Workspace', params?.workspaceId.toString());
+            const workspaceRef = doc(db, 'workspaces', params?.workspaceId.toString());
             const workspaceSnap = await getDoc(workspaceRef);
             
             if (workspaceSnap.exists()) {
@@ -52,7 +52,7 @@ const SideBar = ({ params }) => {
     };
 
     const GetDocumentList = () => {
-        const q = query(collection(db, 'workspaceDocuments'), where('workspaceId', '==', Number(params?.workspaceId)));
+        const q = query(collection(db, 'documents'), where('workspaceId', '==', Number(params?.workspaceId)));
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             setDocumentList([]);
@@ -74,9 +74,10 @@ const SideBar = ({ params }) => {
 
         setLoading(true);
         const docId = crypto.randomUUID();
-        await setDoc(doc(db, 'workspaceDocuments', docId.toString()), {
+        await setDoc(doc(db, 'documents', docId.toString()), {
             workspaceId: Number(params?.workspaceId),
             createdBy: user?.primaryEmailAddress?.emailAddress,
+            createdAt : new Date(),
             coverImage: null,
             emoji: null,
             id: docId,

@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode:false,
     images:{
-        domains:['img.freepik.com']
+        domains:['img.freepik.com','files.edgestore.dev']
     }
 };
 

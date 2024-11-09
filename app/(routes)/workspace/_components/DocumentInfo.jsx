@@ -19,7 +19,7 @@ const DocumentInfo = ({params}) => {
   }, [params])
 
   const GetDocumentInfo = async () => {
-    const docRef = doc(db, 'workspaceDocuments', params?.documentId);
+    const docRef = doc(db, 'documents', params?.documentId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -30,7 +30,7 @@ const DocumentInfo = ({params}) => {
   }
 
   const updateDocumentInfo = async(key,value) => {
-    const docRef = doc(db,'workspaceDocuments',params?.documentId);
+    const docRef = doc(db,'documents',params?.documentId);
     await updateDoc(docRef,{
         [key]:value
     })

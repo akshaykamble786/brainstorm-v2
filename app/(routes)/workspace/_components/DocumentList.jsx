@@ -13,7 +13,7 @@ const DocumentList = ({ documentList, params }) => {
     const { theme } = useTheme();
 
     const DeleteDocument = async (docId) => {
-        await deleteDoc(doc(db, "workspaceDocuments", docId))
+        await deleteDoc(doc(db, "documents", docId))
         toast({
             description: "Document deleted",
             variant: "destructive"
