@@ -66,7 +66,7 @@ const CreateWorkspace = () => {
     <div className='px-10 md:px-36 lg:px-52 xl:px-80 py-14'>
       <div className='shadow-2xl rounded-xl dark:border border-gray-800'>
 
-        <CoverPicker setNewCover={(v) => setCoverImage(v)}>
+        <CoverPicker currentCover={coverImage} setNewCover={(v) => setCoverImage(v)}>
           <div className='relative group cursor-pointer'>
             <h2 className='hidden absolute p-4 w-full h-full items-center justify-center group-hover:flex'>
               Change Cover

@@ -15,11 +15,11 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CoverOption from '../_shared/CoverOption';
 import Image from 'next/image';
-import { Upload } from 'lucide-react';
+import { Loader2Icon, Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-const CoverPicker = ({ children, setNewCover }) => {
-    const [selectedCover, setSelectedCover] = useState();
+const CoverPicker = ({ children, currentCover, setNewCover }) => {
+    const [selectedCover, setSelectedCover] = useState(currentCover);
     const [uploadedImage, setUploadedImage] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const { edgestore } = useEdgeStore();
@@ -50,23 +50,18 @@ const CoverPicker = ({ children, setNewCover }) => {
         try {
             setIsUploading(true);
             
-            console.log('Starting upload for file:', {
-                name: file.name,
-                type: file.type,
-                size: file.size
-            });
-
-            const res = await edgestore.publicFiles.upload({
+            const uploadOptions = {
                 file,
                 options: {
                     temporary: false,
-                },
-                onProgressChange: (progress) => {
-                    console.log('Upload progress:', progress);
-                },
-            });
+                }
+            };
 
-            console.log('Upload response:', res);
+            if (uploadedImage && !CoverOption.some(cover => cover.imageUrl === uploadedImage)) {
+                uploadOptions.options.replaceTargetUrl = uploadedImage;
+            }
+
+            const res = await edgestore.publicFiles.upload(uploadOptions);
 
             if (res.url) {
                 setUploadedImage(res.url);
@@ -100,15 +95,26 @@ const CoverPicker = ({ children, setNewCover }) => {
         }
     };
 
+    const handleDialogOpen = () => {
+        setSelectedCover(currentCover);
+        setUploadedImage(currentCover && !CoverOption.some(cover => cover.imageUrl === currentCover) ? currentCover : null);
+    };
+
+    const handleUpdate = () => {
+        if (selectedCover && selectedCover !== currentCover) {
+            setNewCover(selectedCover);
+        }
+    };
+
     return (
-        <Dialog>
+        <Dialog onOpenChange={(open) => open && handleDialogOpen()}>
             <DialogTrigger className='w-full'>{children}</DialogTrigger>
             <DialogContent className="max-w-3xl">
                 <DialogHeader>
                     <DialogTitle>Update Cover</DialogTitle>
                 </DialogHeader>
 
-                <Tabs defaultValue="preset" className="w-full">
+                <Tabs defaultValue={currentCover && !CoverOption.some(cover => cover.imageUrl === currentCover) ? "upload" : "preset"} className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="preset">Preset Covers</TabsTrigger>
                         <TabsTrigger value="upload">Upload Image</TabsTrigger>
@@ -123,7 +129,7 @@ const CoverPicker = ({ children, setNewCover }) => {
                                         setSelectedCover(cover?.imageUrl);
                                         setUploadedImage(null);
                                     }}
-                                    className={`${selectedCover == cover?.imageUrl && 'border-primary border-2'} p-1 rounded-md cursor-pointer hover:opacity-80 transition`}
+                                    className={`${selectedCover === cover?.imageUrl ? 'border-primary border-2' : ''} p-1 rounded-md cursor-pointer hover:opacity-80 transition`}
                                 >
                                     <Image
                                         className='h-[70px] w-full rounded-md object-cover'
@@ -159,7 +165,11 @@ const CoverPicker = ({ children, setNewCover }) => {
                                                         onChange={handleFileUpload}
                                                         disabled={isUploading}
                                                     />
-                                                    <Button variant="secondary" disabled={isUploading}>
+                                                    <Button 
+                                                        variant="secondary" 
+                                                        disabled={isUploading}
+                                                        onClick={() => document.querySelector('input[type="file"]').click()}
+                                                    >
                                                         Change Image
                                                     </Button>
                                                 </label>
@@ -180,9 +190,7 @@ const CoverPicker = ({ children, setNewCover }) => {
                                     )}
                                 </div>
                                 {isUploading && (
-                                    <div className="text-sm text-gray-500">
-                                        Uploading...
-                                    </div>
+                                    <Loader2Icon className='animate-spin size-4'/>
                                 )}
                             </div>
                         </div>
@@ -199,7 +207,7 @@ const CoverPicker = ({ children, setNewCover }) => {
                         <Button
                             className="text-sm"
                             type="button"
-                            onClick={() => setNewCover(selectedCover)}
+                            onClick={handleUpdate}
                             disabled={isUploading}
                         >
                             Update

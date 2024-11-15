@@ -43,7 +43,7 @@ const DocumentInfo = ({params}) => {
   return (
     <div>
       {/* Cover  */}
-      <CoverPicker setNewCover={(cover) => {
+      <CoverPicker currentCover={coverImage}  setNewCover={(cover) => {
         setCoverImage(cover);
         updateDocumentInfo('coverImage', cover)
       }}>
