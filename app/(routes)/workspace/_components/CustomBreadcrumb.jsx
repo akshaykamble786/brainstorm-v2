@@ -11,6 +11,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
 
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -67,7 +69,7 @@ const DynamicBreadcrumb = () => {
 
                 if (segments.indexOf(segment) === 1 && names.workspaceName) {
                     label = names.workspaceName;
-                    currentPath = '/dashboard'; 
+                    currentPath = '/dashboard';
                 }
                 else if (segments.indexOf(segment) === 2 && names.documentName) {
                     label = names.documentName;
@@ -84,35 +86,41 @@ const DynamicBreadcrumb = () => {
     }, [pathname, names]);
 
     return (
-        <Breadcrumb>
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                    <Link href="/" passHref legacyBehavior>
-                        <BreadcrumbLink className="flex items-center text-md">
-                            Home
-                        </BreadcrumbLink>
-                    </Link>
-                </BreadcrumbItem>
+        <header className='flex h-3 shrink-0 items-center gap-1'>
+            <div className='flex flex-1 items-center gap-2'>
+                <SidebarTrigger />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+            </div>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <Link href="/" passHref legacyBehavior>
+                            <BreadcrumbLink className="flex items-center text-md">
+                                Home
+                            </BreadcrumbLink>
+                        </Link>
+                    </BreadcrumbItem>
 
-                {pathItems.map((item, index) => (
-                    <React.Fragment key={item.path}>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem className="text-md">
-                            {index === pathItems.length - 1 ? (
-                                <BreadcrumbPage>{item.label}</BreadcrumbPage>
-                            ) : (
-                                <Link href={item.path} passHref legacyBehavior>
-                                    <BreadcrumbLink>
-                                        {item.label}
-                                    </BreadcrumbLink>
-                                </Link>
-                            )}
-                        </BreadcrumbItem>
-                    </React.Fragment>
-                ))}
-            </BreadcrumbList>
-        </Breadcrumb>
+                    {pathItems.map((item, index) => (
+                        <React.Fragment key={item.path}>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem className="text-md">
+                                {index === pathItems.length - 1 ? (
+                                    <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                                ) : (
+                                    <Link href={item.path} passHref legacyBehavior>
+                                        <BreadcrumbLink>
+                                            {item.label}
+                                        </BreadcrumbLink>
+                                    </Link>
+                                )}
+                            </BreadcrumbItem>
+                        </React.Fragment>
+                    ))}
+                </BreadcrumbList>
+            </Breadcrumb>
+        </header>
     );
-};
+}
 
 export default DynamicBreadcrumb;
