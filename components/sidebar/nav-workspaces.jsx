@@ -1,5 +1,9 @@
 import { ChevronRight, Plus } from "lucide-react"
-
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useUser } from "@clerk/nextjs"
+import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from "firebase/firestore"
+import { db } from "@/config/FirebaseConfig"
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,126 +21,199 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { useToast } from "@/hooks/use-toast";
-import { collection, doc, getDoc, onSnapshot, query, setDoc, where } from "firebase/firestore";
-import { db } from "@/config/FirebaseConfig";
+import DocumentOptions from "../../app/(routes)/workspace/_components/DocumentOptions"
+import { useToast } from "@/hooks/use-toast"
+import Link from "next/link"
 
-const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT;
+const MAX_FILE = process.env.NEXT_PUBLIC_MAX_FILE_COUNT
 
-export function NavWorkspaces({
-  workspaces, params
-}) {
-
-  const [documentList, setDocumentList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState("Loading...");
-
-  const user = useUser();
-  const router = useRouter();
+export function NavWorkspaces({ params }) {
+  const [workspaces, setWorkspaces] = useState([])
+  const [loading, setLoading] = useState(false)
+  const user = useUser()
+  const router = useRouter()
   const { toast } = useToast()
 
   useEffect(() => {
-    if (params) {
-      GetDocumentList();
-      GetWorkspaceName();
-    }
-  }, [params]);
+    if (user?.user?.id) {
+      const workspacesQuery = query(
+        collection(db, 'workspaces'),
+        where('createdBy', '==', user.user.primaryEmailAddress.emailAddress)
+      )
 
-  const GetWorkspaceName = async () => {
-    try {
-      const workspaceRef = doc(db, 'workspaces', params?.workspaceId.toString());
-      const workspaceSnap = await getDoc(workspaceRef);
+      const unsubscribeWorkspaces = onSnapshot(workspacesQuery, async (snapshot) => {
+        const workspacePromises = snapshot.docs.map(async (workspaceDoc) => {
+          const workspaceData = workspaceDoc.data()
 
-      if (workspaceSnap.exists()) {
-        setWorkspaceName(workspaceSnap.data().workspaceName);
-      } else {
-        setWorkspaceName("Untitled Workspace");
-      }
-    } catch (error) {
-      console.error("Error fetching workspace name:", error);
-      setWorkspaceName("Error loading workspace");
-    }
-  };
+          const docsQuery = query(
+            collection(db, 'documents'),
+            where('workspaceId', '==', workspaceData.id)
+          )
 
-  const GetDocumentList = () => {
-    const q = query(collection(db, 'documents'), where('workspaceId', '==', Number(params?.workspaceId)));
+          const docsSnapshot = await new Promise((resolve) => {
+            onSnapshot(docsQuery, (docs) => {
+              resolve(docs)
+            })
+          })
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      setDocumentList([]);
-      querySnapshot.forEach((doc) => {
-        setDocumentList(documentList => [...documentList, doc.data()])
+          const documents = docsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            name: doc.data().documentName,
+            emoji: doc.data().emoji || "📄",
+            ...doc.data(),
+          }))
+
+          return {
+            id: workspaceData.id,
+            name: workspaceData.workspaceName,
+            emoji: workspaceData.emoji || "📁",
+            isActive: params?.workspaceId === workspaceData.id.toString(),
+            documents
+          }
+        })
+
+        const populatedWorkspaces = await Promise.all(workspacePromises)
+        setWorkspaces(populatedWorkspaces)
       })
-    })
+
+      return () => unsubscribeWorkspaces()
+    }
+  }, [user, params])
+
+  const createNewDocument = async (workspaceId) => {
+    const workspace = workspaces.find(w => w.id === workspaceId)
+    if (workspace?.documents?.length >= MAX_FILE) {
+      toast({
+        title: "Document Limit Reached",
+        description: "You've reached the maximum number of documents for the free plan.",
+        variant: "default",
+        action: (
+          <ToastAction altText="Upgrade to Pro" onClick={() => router.push('/upgrade')}>
+            Upgrade to Pro
+          </ToastAction>
+        ),
+      });
+
+      return
+    }
+
+    setLoading(true)
+    try {
+      const docId = crypto.randomUUID()
+      await setDoc(doc(db, 'documents', docId), {
+        workspaceId,
+        createdBy: user.user.primaryEmailAddress.emailAddress,
+        createdAt: new Date(),
+        coverImage: null,
+        emoji: "📄",
+        id: docId,
+        documentName: "Untitled Document",
+      })
+
+      await setDoc(doc(db, 'documentOutput', docId), {
+        docId,
+        output: []
+      })
+
+      router.push(`/workspace/${workspaceId}/${docId}`)
+    } catch (error) {
+      console.error("Error creating document:", error)
+      toast({
+        title: "Error",
+        description: "Failed to create new document"
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const CreateNewDocument = async () => {
-    if (documentList?.length >= MAX_FILE) {
+  const deleteDocument = async (documentId) => {
+    try {
+      await deleteDoc(doc(db, 'documents', documentId))
+      await deleteDoc(doc(db, 'documentOutput', documentId))
+
       toast({
-        title: "Upgrade to Pro Plan",
-        description: "You've reached max file limit, upgrade for unlimited file creation",
-        action: <ToastAction altText="Try again">Upgrade</ToastAction>,
+        title: "Success",
+        description: "Document moved to trash"
       })
-      return;
+
+      if (params?.documentId === documentId) {
+        router.push(`/workspace/${params.workspaceId}`)
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete document"
+      })
     }
-
-    setLoading(true);
-    const docId = crypto.randomUUID();
-    await setDoc(doc(db, 'documents', docId.toString()), {
-      workspaceId: Number(params?.workspaceId),
-      createdBy: user?.primaryEmailAddress?.emailAddress,
-      createdAt: new Date(),
-      coverImage: null,
-      emoji: null,
-      id: docId,
-      documentName: "Untitled Document",
-    });
-
-    await setDoc(doc(db, 'documentOutput', docId.toString()), {
-      docId: docId,
-      output: []
-    })
-
-    setLoading(false);
-    router.replace("/workspace/" + params?.workspaceId + "/" + docId);
   }
 
   return (
-    (<SidebarGroup>
-      <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+    <SidebarGroup>
+      <SidebarGroupLabel>Workspaces</SidebarGroupLabel>
+      <SidebarMenuAction
+        disabled={loading}
+      >
+        <Link href="/createworkspace">
+          <Plus className="size-4" />
+        </Link>
+      </SidebarMenuAction>
       <SidebarGroupContent>
         <SidebarMenu>
           {workspaces.map((workspace) => (
-            <Collapsible key={workspace.name}>
+            <Collapsible
+              key={workspace.id}
+              defaultOpen={workspace.isActive}
+            >
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <a href="#">
+                <SidebarMenuButton
+                  asChild
+                  className={workspace.isActive ? "bg-accent" : ""}
+                >
+                  <Link href={`/workspace/${workspace.id}`}>
                     <span>{workspace.emoji}</span>
                     <span>{workspace.name}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuAction
                     className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
-                    showOnHover>
+                    showOnHover
+                  >
                     <ChevronRight />
                   </SidebarMenuAction>
                 </CollapsibleTrigger>
-                <SidebarMenuAction showOnHover>
+                <SidebarMenuAction
+                  showOnHover
+                  onClick={() => createNewDocument(workspace.id)}
+                  disabled={loading}
+                >
                   <Plus />
                 </SidebarMenuAction>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {workspace.pages.map((page) => (
-                      <SidebarMenuSubItem key={page.name}>
-                        <SidebarMenuSubButton asChild>
-                          <a href="#">
-                            <span>{page.emoji}</span>
-                            <span>{page.name}</span>
-                          </a>
+                    {workspace.documents.map((doc) => (
+                      <SidebarMenuSubItem
+                        key={doc.id}
+                        className="group flex items-center justify-between pr-2"
+                      >
+                        <SidebarMenuSubButton
+                          asChild
+                          className={`flex-1 ${params?.documentId === doc.id ? "bg-accent" : ""}`}
+                        >
+                          <Link href={`/workspace/${workspace.id}/${doc.id}`}>
+                            <span>{doc.emoji}</span>
+                            <span>{doc.name}</span>
+                          </Link>
                         </SidebarMenuSubButton>
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+                          <DocumentOptions
+                            doc={doc}
+                            deleteDocument={deleteDocument}
+                            workspaceId={workspace.id}
+                          />
+                        </div>
                       </SidebarMenuSubItem>
                     ))}
                   </SidebarMenuSub>
@@ -146,6 +223,6 @@ export function NavWorkspaces({
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
-    </SidebarGroup>)
-  );
+    </SidebarGroup>
+  )
 }

@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { Badge } from "@/components/ui/badge"
 import React, { useState } from "react";
 import DynamicBreadcrumb from "./CustomBreadcrumb";
@@ -19,7 +17,6 @@ const DocumentHeader = ({ workspaceName }) => {
             </div>
 
             <div className="flex items-center gap-4">
-                {/* <OrganizationSwitcher /> */}
                 <ModeToggle/>
                 <InviteCollaborator/>
                 {saving ?

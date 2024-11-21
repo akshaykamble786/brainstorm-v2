@@ -11,7 +11,6 @@ function CommentBox() {
     {threads?.map((thread) => (
       <Thread key={thread.id} thread={thread} />
     ))}
-    {/* <Composer /> */}
     <Composer className='z-10'>
       <Composer.Submit className="btn-primary" style={{ color: "#ffffff" }}>
         Reply

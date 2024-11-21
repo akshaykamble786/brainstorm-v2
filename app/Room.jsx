@@ -48,7 +48,7 @@ export function Room({ children, params }) {
           cursor: null
         }}
       >
-        <ClientSideSuspense fallback={<Loader2Icon className="animate-spin"/>}>
+        <ClientSideSuspense fallback={<WorkspaceLoader className="animate-pulse"/>}>
           <LiveCursorProvider>
             {children}
           </LiveCursorProvider>

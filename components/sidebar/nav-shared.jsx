@@ -1,15 +1,12 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
 import {
   ArrowUpRight,
-  Link as LinkIcon,
+  Link,
   MoreHorizontal,
   StarOff,
   Trash2,
 } from "lucide-react"
-
-import Link from "next/link"
 
 import {
   DropdownMenu,
@@ -27,32 +24,23 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { useFavorites } from '@/hooks/use-favorites'
 
-export function NavFavorites() {
-  const { favorites, removeFromFavorites } = useFavorites();
-  const { isMobile } = useSidebar();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted || favorites.length === 0) {
-    return null;
-  }
+export function NavShared({
+  shared
+}) {
+  const { isMobile } = useSidebar()
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+    (<SidebarGroup className="group-data-[collapsible=icon]:hidden">
+      <SidebarGroupLabel>Shared</SidebarGroupLabel>
       <SidebarMenu>
-        {favorites.map((item) => (
-          <SidebarMenuItem key={item.id}>
+        {shared.map((item) => (
+          <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <Link href={item.url} title={item.name}>
+              <a href={item.url} title={item.name}>
                 <span>{item.emoji}</span>
                 <span>{item.name}</span>
-              </Link>
+              </a>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -64,18 +52,13 @@ export function NavFavorites() {
               <DropdownMenuContent
                 className="w-56 rounded-lg"
                 side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem onClick={() => removeFromFavorites(item.id)}>
-                  <StarOff className="text-muted-foreground" />
-                  <span>Remove from Favorites</span>
-                </DropdownMenuItem>
+                align={isMobile ? "end" : "start"}>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.url)}>
-                  <LinkIcon className="text-muted-foreground" />
+                <DropdownMenuItem>
+                  <Link className="text-muted-foreground" />
                   <span>Copy Link</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.open(item.url, '_blank')}>
+                <DropdownMenuItem>
                   <ArrowUpRight className="text-muted-foreground" />
                   <span>Open in New Tab</span>
                 </DropdownMenuItem>
@@ -89,6 +72,6 @@ export function NavFavorites() {
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
-    </SidebarGroup>
+    </SidebarGroup>)
   );
 }

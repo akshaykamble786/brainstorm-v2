@@ -69,6 +69,7 @@ const CoverPicker = ({ children, currentCover, setNewCover }) => {
                 
                 toast({
                     title: "Upload successful",
+                    variant:"success",
                     description: "Your cover image has been uploaded",
                 });
             } else {

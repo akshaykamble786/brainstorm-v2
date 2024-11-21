@@ -10,6 +10,7 @@ import {
     ChevronsUpDown,
     Command,
     CreditCard,
+    DollarSign,
     Frame,
     GalleryVerticalEnd,
     LogOut,
@@ -34,6 +35,7 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { SignOutButton, useClerk, UserButton, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const data = {
     user: {
@@ -167,6 +169,7 @@ const data = {
 export default function Navfooter() {
     const { user } = useUser();
     const { signOut } = useClerk()
+    const router = useRouter();
     const clerk = useClerk();
 
     return (
@@ -203,7 +206,7 @@ export default function Navfooter() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push('/upgrade')}>
                             <Sparkles className="mr-1.5 size-4" />
                             Upgrade to Pro
                         </DropdownMenuItem>
@@ -216,9 +219,13 @@ export default function Navfooter() {
                             <BadgeCheck className="mr-1.5 size-5" />
                             Account
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push('/billing')}>
                             <CreditCard className="mr-1.5 size-5" />
                             Billing
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push('/pricing')}>
+                            <DollarSign className="mr-1.5 size-5" />
+                            Pricing
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

@@ -6,6 +6,8 @@ import { twMerge } from "tailwind-merge";
 import { Toaster } from "@/components/ui/toaster";
 import "@liveblocks/react-ui/styles.css";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import Header from "@/components/global/Header";
+import Footer from "@/components/global/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,21 +21,6 @@ export default function RootLayout({ children }) {
       <body className={twMerge('bg-background', inter.className)}>
         <ClerkProvider
         afterSignOutUrl="/"
-          appearance={{
-            baseTheme: 'dark',
-            // elements: {
-            //   userButtonPopoverCard: "!bg-zinc-900", // Using !important and a darker color
-            //   userButtonPopoverContent: "!bg-zinc-900 !text-white",
-            //   userButtonPopoverActionButton: "!text-white hover:!bg-zinc-800",
-            //   userButtonPopoverFooter: "!bg-zinc-900",
-            //   userButtonPopoverHeader: "!bg-zinc-900",
-            // },
-            variables: {
-              colorBackground: "#030014", // Zinc-900 hex value
-              colorText: "#CAC2FF",
-              colorTextSecondary: "#CAC2FF", // Zinc-400 for secondary text
-            }
-          }}
         >
           <EdgeStoreProvider>
             <ThemeProvider

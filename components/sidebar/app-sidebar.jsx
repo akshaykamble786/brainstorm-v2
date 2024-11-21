@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
   Blocks,
-  Command,
   Inbox,
   Search,
   Settings2,
@@ -14,6 +12,7 @@ import {
 
 import { NavMain } from "./nav-main"
 import { NavSecondary } from "./nav-secondary"
+import { NavShared } from "./nav-shared"
 import { NavWorkspaces } from "./nav-workspaces"
 import {
   Sidebar,
@@ -46,7 +45,7 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Usage",
       url: "#",
       icon: Settings2,
     },
@@ -61,40 +60,18 @@ const data = {
       icon: Trash2,
     },
   ],
-  workspaces: [
+  shared: [
     {
-      name: "Creative Projects",
-      emoji: "🎨",
-      pages: [
-        {
-          name: "Writing Ideas & Story Outlines",
-          url: "#",
-          emoji: "✍️",
-        },
-        {
-          name: "Art & Design Portfolio",
-          url: "#",
-          emoji: "🖼️",
-        },
-        {
-          name: "Music Composition & Practice Log",
-          url: "#",
-          emoji: "🎵",
-        },
-      ],
-    },
-  ],
-  favorites: [
-    {
-      name: "Project Management",
+      name: "Birthday Planning",
       url: "#",
-      emoji: "📊",
+      emoji: "🎂",
     },
   ]
 }
 
-export function AppSidebar({
+export function AppSidebar({ params
 }) {
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -102,9 +79,10 @@ export function AppSidebar({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavWorkspaces workspaces={data.workspaces} />
-        <NavFavorites favorites={data.favorites} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavWorkspaces params={params}/>
+        <NavFavorites />
+        <NavShared shared={data.shared} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" params={params} />
       </SidebarContent>
       <Navfooter />
       <SidebarRail />

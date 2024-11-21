@@ -64,7 +64,7 @@ const ChatWithDocument = ({ documentContent }) => {
       const formattedContent = formatDocumentContent(documentContent);
       const formattedQuery = `Context: Here is the document content to analyze: ${formattedContent}
                               Question: ${currentQuery}
-                              Unless specified, this is a draft. Keep things shortish. Do not add any supplementary text, as everything you say will be placed into a document. If you're confused however, it's okay to ask a user for info. Don't add bold styling to headings. Don't mention anything about Editor.js and please provide your answer in the following JSON format:
+                              Unless specified, this is a draft. Keep things shortish. Do not add any supplementary text, as everything you say will be placed into a document. If you're confused however, it's okay to ask a user for info. If the user asks questions unrelated to the document, then tell the user to ask document-related questions .Don't add bold styling to headings. Don't mention anything about Editor.js and please provide your answer in the following JSON format:
                               {
                                   "answer": "Your detailed answer here",
                                   "content": "Any additional content or explanations"

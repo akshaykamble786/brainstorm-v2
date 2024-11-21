@@ -95,7 +95,7 @@ const DynamicBreadcrumb = () => {
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <Link href="/" passHref legacyBehavior>
-                            <BreadcrumbLink className="flex items-center text-md">
+                            <BreadcrumbLink className="flex items-center text-md text-foreground">
                                 Home
                             </BreadcrumbLink>
                         </Link>
@@ -109,7 +109,7 @@ const DynamicBreadcrumb = () => {
                                     <BreadcrumbPage>{item.label}</BreadcrumbPage>
                                 ) : (
                                     <Link href={item.path} passHref legacyBehavior>
-                                        <BreadcrumbLink>
+                                        <BreadcrumbLink className="text-foreground">
                                             {item.label}
                                         </BreadcrumbLink>
                                     </Link>
