@@ -62,27 +62,22 @@ export function NavFavorites() {
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-56 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
               >
-                <DropdownMenuItem onClick={() => removeFromFavorites(item.id)}>
-                  <StarOff className="text-muted-foreground" />
+                <DropdownMenuItem className="gap-2 flex" onClick={() => removeFromFavorites(item.id)}>
+                  <StarOff className="size-4" />
                   <span>Remove from Favorites</span>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.url)}>
-                  <LinkIcon className="text-muted-foreground" />
+                <DropdownMenuItem className="gap-2 flex" onClick={() => navigator.clipboard.writeText(item.url)}>
+                  <LinkIcon className="size-4" />
                   <span>Copy Link</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.open(item.url, '_blank')}>
-                  <ArrowUpRight className="text-muted-foreground" />
+                <DropdownMenuItem className="gap-2 flex" onClick={() => window.open(item.url, '_blank')}>
+                  <ArrowUpRight className="size-4" />
                   <span>Open in New Tab</span>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
-                  <span>Delete</span>
+                <DropdownMenuItem className="gap-2 flex text-red-500">
+                  <Trash2 className="size-4" />
+                  <span>Move to trash</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

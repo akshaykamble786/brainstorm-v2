@@ -16,7 +16,7 @@ export default function Pricing() {
             <div className="text-center max-w-3xl mx-auto mb-12">
                 <h1 className="text-3xl md:text-4xl font-bold mb-4">Plans and Pricing</h1>
                 <p className="text-gray-400">
-                    We want to empower everyone to capture their ideas, thoughts, and notes in the most unobtrusive way manner possible. From individuals to enterprises, we have a plan that fits your use case.
+                    We aim to empower everyone to seamlessly capture their ideas, thoughts, and insights in the most intuitive and unobtrusive way. Individual or an enterprise, we have a plan that fits your use case
                 </p>
             </div>
 
@@ -35,19 +35,19 @@ export default function Pricing() {
                         <ul className="space-y-3 mb-6">
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-primary" />
-                                <span className="text-sm">Five documents per workspace</span>
+                                <span className="text-sm">Up to 3 workspaces per user</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-primary" />
-                                <span className="text-sm">Three workspaces</span>
+                                <span className="text-sm">Maximum of 5 documents per workspace</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-primary" />
-                                <span className="text-sm">Two collaborators maximum</span>
+                                <span className="text-sm">Collaboration with up to 2 users</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Check className="w-4 h-4 text-primary" />
-                                <span className="text-sm">Limited credits</span>
+                                <span className="text-sm">Access to limited AI credits</span>
                             </li>
                         </ul>
                     </CardContent>
@@ -76,11 +76,11 @@ export default function Pricing() {
                             <ul className="space-y-3">
                                 <li className="flex items-center gap-2">
                                     <Check className="w-4 h-4 text-primary" />
-                                    <span className="text-sm">Unlimited documents</span>
+                                    <span className="text-sm">Unlimited workspaces</span>
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <Check className="w-4 h-4 text-primary" />
-                                    <span className="text-sm">Unlimited workspaces</span>
+                                    <span className="text-sm">Unlimited documents</span>
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <Check className="w-4 h-4 text-primary" />
@@ -88,7 +88,7 @@ export default function Pricing() {
                                 </li>
                                 <li className="flex items-center gap-2">
                                     <Check className="w-4 h-4 text-primary" />
-                                    <span className="text-sm">Unlimited credits</span>
+                                    <span className="text-sm">Unlimited AI credits</span>
                                 </li>
                             </ul>
                         </div>
@@ -106,26 +106,33 @@ export default function Pricing() {
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1" className="border-zinc-800">
                         <AccordionTrigger className="hover:no-underline">
-                            What does a &quot;message&quot; mean on v0?
+                            Can I upgrade or downgrade my plan anytime?
                         </AccordionTrigger>
                         <AccordionContent>
-                            A message represents each interaction with v0, including both your inputs and v0&apos;s responses.
+                            Absolutely! You can upgrade or downgrade your plan at any time to suit your changing needs. No hidden fees or long-term commitments.
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-2" className="border-zinc-800">
                         <AccordionTrigger className="hover:no-underline">
-                            Why can&apos;t I purchase credits?
+                            How does the AI assist in my workspace?
                         </AccordionTrigger>
                         <AccordionContent>
-                            Credits are being replaced with subscription plans to provide a better experience for our users.
-                        </AccordionContent>
+                            Our AI-powered tools provide document summarization, content generation, real-time suggestions, and language translation to enhance productivity and streamline workflows.                        </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="item-3" className="border-zinc-800">
                         <AccordionTrigger className="hover:no-underline">
-                            What does &quot;public beta&quot; mean?
+                            Can I access my workspace offline?
                         </AccordionTrigger>
                         <AccordionContent>
-                            Public beta means we&apos;re still improving and adding features while the product is publicly available.
+                            Currently, our platform requires an internet connection for full functionality. However, we are working on offline capabilities for future updates.
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-4" className="border-zinc-800">
+                        <AccordionTrigger className="hover:no-underline">
+                            How do credits work on the platform?
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            AI credits are used for tasks like content generation and document summarization. Free-tier users have limited credits, while pro users enjoy unlimited credits.
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>

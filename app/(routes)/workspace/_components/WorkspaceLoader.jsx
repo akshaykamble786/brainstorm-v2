@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const WorkspaceLoader = () => {
   return (
-      <div className="flex min-h-screen bg-slate-950">
+      <div className="flex min-h-screen bg-background">
 
         {/* Main Content */}
         <div className="flex-1 p-6">

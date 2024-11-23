@@ -52,7 +52,7 @@ export default function Billing() {
 
         <Card>
           <CardContent className="pt-6">
-            <div className="space-y-6">
+            <div className="space-y-3">
               <h2 className="text-xl font-semibold">On-Demand Credits</h2>
               <p className="text-gray-500 text-sm">
                 You cannot buy on-demand credits without an active subscription. Please resume your subscription or choose a new plan.

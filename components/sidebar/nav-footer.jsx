@@ -15,6 +15,7 @@ import {
     GalleryVerticalEnd,
     LogOut,
     Map,
+    Moon,
     PieChart,
     Settings2,
     Sparkles,
@@ -36,6 +37,7 @@ import {
 } from "@/components/ui/sidebar"
 import { SignOutButton, useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { ModeToggle } from "@/app/(routes)/dashboard/_components/ModeToggle";
 
 const data = {
     user: {
@@ -226,6 +228,11 @@ export default function Navfooter() {
                         <DropdownMenuItem onClick={() => router.push('/pricing')}>
                             <DollarSign className="mr-1.5 size-5" />
                             Pricing
+                        </DropdownMenuItem>
+                        <DropdownMenuItem >
+                            <Moon className="mr-1.5 size-5" />
+                            Theme
+                            <ModeToggle/>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
