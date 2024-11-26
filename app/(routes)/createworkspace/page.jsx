@@ -81,7 +81,7 @@ const CreateWorkspace = () => {
         createdBy: user?.primaryEmailAddress?.emailAddress,
         createdAt: new Date(),
         coverImage: null,
-        emoji: null,
+        emoji: "📄",
         id: docId,
         documentName: "Untitled Document",
       });
