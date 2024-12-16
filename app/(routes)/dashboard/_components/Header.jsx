@@ -3,7 +3,7 @@
 import Logo from '@/components/global/Logo'
 import { OrganizationSwitcher, useAuth, UserButton, useUser } from '@clerk/nextjs'
 import React, { useEffect } from 'react'
-import { ModeToggle } from './ModeToggle';
+import { ThemeToggle } from './ThemeToggle';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/config/FirebaseConfig';
 
@@ -39,7 +39,7 @@ const Header = () => {
         afterLeaveOrganizationUrl={'/dashboard'}
       />
 
-      <ModeToggle />
+      <ThemeToggle />
       <UserButton />
     </div>
   )

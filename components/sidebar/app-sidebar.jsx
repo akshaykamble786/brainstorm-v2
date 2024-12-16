@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   Blocks,
-  Inbox,
   Search,
   Settings2,
   Sparkles,
@@ -35,12 +34,6 @@ const data = {
       title: "Create with AI",
       url: "#",
       icon: Sparkles,
-    },
-    {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
-      badge: "10",
     },
   ],
   navSecondary: [

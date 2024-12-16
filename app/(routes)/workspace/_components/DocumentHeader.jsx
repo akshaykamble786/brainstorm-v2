@@ -4,11 +4,18 @@ import { Badge } from "@/components/ui/badge"
 import React, { useState } from "react";
 import DynamicBreadcrumb from "./CustomBreadcrumb";
 import InviteCollaborator from "./InviteCollaborator";
-import { ModeToggle } from "../../dashboard/_components/ModeToggle";
+import { Bell, Loader2Icon } from "lucide-react";
+import NotificationSystem from "./NotificationSystem"
+import useOwner from "../../../../hooks/use-owner";
+import { ClientSideSuspense } from "@liveblocks/react/suspense";
+import { Avataars } from "@/components/Avataars";
+import { useSyncStatus } from "@liveblocks/react/suspense";
 
 const DocumentHeader = ({ workspaceName }) => {
     const [saving, setSaving] = useState(false);
-    
+    const isOwner = useOwner()
+    const syncStatus = useSyncStatus({ smooth: true });
+
     return (
         <div className="sticky flex items-center justify-between p-[15px] border-b">
             <div className="flex flex-col gap-2">
@@ -17,12 +24,19 @@ const DocumentHeader = ({ workspaceName }) => {
             </div>
 
             <div className="flex items-center gap-4">
-                <ModeToggle/>
-                <InviteCollaborator/>
-                {saving ?
-                    <Badge variant="secondary" className="bg-orange-600">Saving...</Badge>
-                    : <Badge variant="secondary" className="bg-emerald-600">Saved</Badge>
+                <NotificationSystem>
+                    <Bell className="size-5 cursor-pointer" />
+                </NotificationSystem>
+                {
+                    isOwner &&
+                    <InviteCollaborator />
                 }
+                <ClientSideSuspense fallback={<Loader2Icon/>}>
+                    <Avataars />
+                </ClientSideSuspense>
+                    {syncStatus === "synchronizing" ? <Badge variant="secondary" className="bg-orange-600">Saving...</Badge>
+                        : <Badge variant="secondary" className="bg-emerald-600">Saved</Badge>
+                    }
             </div>
         </div>
     )

@@ -3,23 +3,29 @@ import DocumentHeader from "./DocumentHeader";
 import DocumentInfo from "./DocumentInfo";
 import RichTextEditor from "./RichTextEditor";
 import { Button } from "@/components/ui/button";
-import { MessageSquareText, X } from "lucide-react";
+import { Loader2Icon, MessageSquareText, X } from "lucide-react";
 import CommentSection from "./CommentSection";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AdvancedEditor } from "@/components/editor/advanced-editor";
+import { ClientSideSuspense } from "@liveblocks/react/suspense";
 
 const DocumentEditor = ({ params }) => {
     const [openComment, setOpenComment] = useState(false);
+    const [charsCount, setCharsCount] = useState(0);
 
     return (
         <div className="relative">
             {/* Header */}
-            <DocumentHeader /> 
-                       <DocumentInfo params={params} />
+            <DocumentHeader />
+            <DocumentInfo params={params} charsCount={charsCount} />
             {/* rich text editor */}
             <div className="grid grid-cols-4">
-
                 <div className="col-span-3">
-                    <RichTextEditor params={params} />
+                    {/* <RichTextEditor params={params} /> */}
+                    <ClientSideSuspense fallback={<Loader2Icon />}>
+                        <AdvancedEditor setCharsCount={setCharsCount} />
+                    </ClientSideSuspense>
+
                 </div>
 
                 <TooltipProvider>

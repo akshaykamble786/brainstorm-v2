@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-import { ModeToggle } from "../../dashboard/_components/ModeToggle";
+import { ModeToggle } from "../../dashboard/_components/ThemeToggle";
 import Diamond from "../../../../public/icons/diamond.svg"
 import Image from "next/image";
 import NotificationSystem from "./NotificationSystem";
@@ -135,7 +135,7 @@ const SideBar = ({ params }) => {
                     <SignOutButton>
                         <LogOutIcon />
                     </SignOutButton>
-                    <ModeToggle />
+                    <ThemeToggle />
                 </div>
             </div>
         </div>

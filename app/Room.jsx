@@ -9,9 +9,9 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import WorkspaceLoader from "./(routes)/workspace/_components/WorkspaceLoader";
 import LiveCursorProvider from "@/components/ui/LiveCursorProvider";
-import { Loader2Icon } from "lucide-react";
 
 export function Room({ children, params }) {
+  console.log("RoomProvider initialized with id:", params?.documentId);
   return (
     <LiveblocksProvider
       throttle={32}

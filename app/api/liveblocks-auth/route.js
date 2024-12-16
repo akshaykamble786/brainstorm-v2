@@ -3,7 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { Liveblocks } from "@liveblocks/node";
 import { NextResponse } from "next/server";
 
-const liveblocks = new Liveblocks({
+export const liveblocks = new Liveblocks({
   secret: process.env.LIVEBLOCKS_SK,
 });
 
@@ -29,8 +29,6 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-
-    console.log("Room ID:", roomId);
 
     const session = liveblocks.prepareSession(
       user.primaryEmailAddress?.emailAddress,

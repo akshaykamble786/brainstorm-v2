@@ -1,60 +1,83 @@
-import { Button } from '@/components/ui/button'
-import React, { useState } from 'react'
+'use client'
+
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from '@/components/ui/input';
+import { useSelf } from '@liveblocks/react/suspense';
+import React, { useState } from 'react'
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
+const InviteCollaborator = ({ roomId, collaborators, creatorId, currentUserType }) => {
+  const user = useSelf();
 
-const InviteCollaborator = () => {
-    const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [userQuery, setUserQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleChatSubmit();
-        }
-      };
-    
-    return (
-        <>
-            <Button
-                variant="default"
-                className="h-[36px]"
-                onClick={() => setOpen(true)}
-            >
-                Invite
-            </Button>
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Invite a Collaborator</DialogTitle>
-                        <DialogDescription>
-                            Invite other users to collaborate on your documents in real-time
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Input
-                        placeholder="Invite your friends"
-                        value={userQuery}
-                        onChange={(e) => setUserQuery(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                        disabled={loading}
-                        className="flex-1"
-                    />
-                    <Button type="submit" disabled={loading} className="min-w-[75px]">
-                        {loading ? <Loader2Icon className="animate-spin w-5 h-5" /> : 'Invite'}
-                    </Button>
-                </DialogContent>
-            </Dialog>
-        </>
-    )
+  const [email, setEmail] = useState('');
+  const [userType, setUserType] = useState('viewer');
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <Button className="gradient-blue flex h-9 gap-1 px-4" disabled={currentUserType !== 'editor'}>
+          <p className="mr-1 hidden sm:block">
+            Share
+          </p>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="shad-dialog">
+        <DialogHeader>
+          <DialogTitle>Manage who can view this project</DialogTitle>
+          <DialogDescription>Select which users can view and edit this document</DialogDescription>
+        </DialogHeader>
+
+        <Label htmlFor="email" className="mt-3 text-blue-100">
+          Email address
+        </Label>
+        <div className="flex items-center gap-3">
+          <div className="flex flex-1 rounded-md bg-dark-400">
+            <Input 
+              id="email"
+              placeholder="Enter email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="share-input"
+            />
+            {/* <UserTypeSelector 
+              userType={userType}
+              setUserType={setUserType}
+            /> */}
+          </div>
+          <Button type="submit" className="gradient-blue flex h-full gap-1 px-5" disabled={loading}>
+            {loading ? 'Sending...' : 'Invite'}
+          </Button>
+        </div>
+
+        {/* <div className="my-2 space-y-2">
+          <ul className="flex flex-col">
+            {collaborators.map((collaborator) => (
+              <Collaborator 
+                key={collaborator.id}
+                roomId={roomId}
+                creatorId={creatorId}
+                email={collaborator.email}
+                collaborator={collaborator}
+                user={user.info}
+              />
+            ))}
+          </ul>
+        </div> */}
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 export default InviteCollaborator

@@ -38,136 +38,7 @@ import {
 } from "@/components/ui/sidebar"
 import { SignOutButton, useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { ModeToggle } from "@/app/(routes)/dashboard/_components/ModeToggle";
-
-const data = {
-    user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
-    teams: [
-        {
-            name: "Acme Inc",
-            logo: GalleryVerticalEnd,
-            plan: "Enterprise",
-        },
-        {
-            name: "Acme Corp.",
-            logo: AudioWaveform,
-            plan: "Startup",
-        },
-        {
-            name: "Evil Corp.",
-            logo: Command,
-            plan: "Free",
-        },
-    ],
-    navMain: [
-        {
-            title: "Playground",
-            url: "#",
-            icon: SquareTerminal,
-            isActive: true,
-            items: [
-                {
-                    title: "History",
-                    url: "#",
-                },
-                {
-                    title: "Starred",
-                    url: "#",
-                },
-                {
-                    title: "Settings",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Models",
-            url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Documentation",
-            url: "#",
-            icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Settings",
-            url: "#",
-            icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
-            ],
-        },
-    ],
-    projects: [
-        {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
-        },
-        {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
-        },
-        {
-            name: "Travel",
-            url: "#",
-            icon: Map,
-        },
-    ],
-}
+import { ThemeToggle } from "@/app/(routes)/dashboard/_components/ThemeToggle";
 
 export default function Navfooter() {
     const { user } = useUser();
@@ -182,7 +53,7 @@ export default function Navfooter() {
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
                             size="lg"
-                            className="py-8 px-4 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className="py-8 px-4 data-[state=open]:bg-background data-[state=open]:text-foreground"
                         >
                             <UserButton />
                             <div className="flex-col gap-4">
@@ -231,15 +102,6 @@ export default function Navfooter() {
                                 Pricing
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem >
-                                <div className="flex w-full justify-between items-center">
-                                    <div className="flex items-center">
-                                        <SunMoon className="mr-1.5 size-5" />
-                                        Theme
-                                    </div>
-                                    <ModeToggle />
-                                </div>
-                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuItem onClick={() => {
                             signOut();
