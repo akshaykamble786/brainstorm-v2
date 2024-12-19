@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "d": "next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.0.11",
     "@clerk/clerk-sdk-node": "^5.1.1",
     "@clerk/nextjs": "^5.7.1",
     "@edgestore/react": "^0.2.2",
@@ -71,8 +72,7 @@
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.5.0",
-    "use-debounce": "^10.0.4",
-    "zod": "^3.23.8"
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
@@ -80,7 +80,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.14",
     "postcss": "^8",
-    "simple-image-editorjs": "^1.4.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.6.2"
   }

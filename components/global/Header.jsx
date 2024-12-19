@@ -134,7 +134,7 @@ const Header = () => {
           <>
             <Link href="/dashboard">
               <Button variant="outline" className="px-3 hidden sm:block">
-                Go to Dashboard &rarr;
+                Dashboard &rarr;
               </Button>
             </Link>
             <SignOutButton>

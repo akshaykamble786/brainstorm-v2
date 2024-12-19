@@ -27,7 +27,7 @@ const InviteCollaborator = ({ roomId, collaborators, creatorId, currentUserType 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button className="gradient-blue flex h-9 gap-1 px-4" disabled={currentUserType !== 'editor'}>
+        <Button className="gradient-blue flex h-9 gap-1 px-4">
           <p className="mr-1 hidden sm:block">
             Share
           </p>
