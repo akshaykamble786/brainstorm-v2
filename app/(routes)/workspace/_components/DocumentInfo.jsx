@@ -9,6 +9,9 @@ import { SmilePlusIcon } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { ThemeToggle } from "../../dashboard/_components/ThemeToggle";
+import { ClientSideSuspense } from "@liveblocks/react/suspense";
+import { Loader2Icon } from "lucide-react";
+import { Avataars } from "@/components/Avataars";
 
 const DocumentInfo = ({ params, charsCount }) => {
   const [coverImage, setCoverImage] = useState("/cover.png");
@@ -102,13 +105,16 @@ const DocumentInfo = ({ params, charsCount }) => {
           />
         </div>
         {/* Character Count and Mode Toggle */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {charsCount > 0 && (
             <div className="rounded-lg bg-accent px-2 py-1 text-sm text-muted-foreground">
               {charsCount} Words
             </div>
           )}
           <ThemeToggle />
+          <ClientSideSuspense fallback={<Loader2Icon />}>
+            <Avataars />
+          </ClientSideSuspense>
         </div>
       </div>
     </div>

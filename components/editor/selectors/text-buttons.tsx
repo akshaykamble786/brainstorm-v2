@@ -1,6 +1,10 @@
 import { Button } from "@/components/editor/ui/button";
 import { cn } from "@/lib/utils";
 import {
+  AlignLeft,
+  AlignRight,
+  AlignCenter,
+  AlignJustify,
   BoldIcon,
   CodeIcon,
   ItalicIcon,
@@ -43,6 +47,30 @@ export const TextButtons = () => {
       isActive: (editor) => editor?.isActive("code") ?? false,
       command: (editor) => editor?.chain().focus().toggleCode().run(),
       icon: CodeIcon,
+    },
+    {
+      name: "align-left",
+      isActive: (editor) => editor?.isActive({ textAlign: 'left' }) ?? false,
+      command: (editor) => editor?.chain().focus().setTextAlign('left').run(),
+      icon: AlignLeft,
+    },
+    {
+      name: "align-center", 
+      isActive: (editor) => editor?.isActive({ textAlign: 'center' }) ?? false,
+      command: (editor) => editor?.chain().focus().setTextAlign('center').run(),
+      icon: AlignCenter,
+    },
+    {
+      name: "align-right",
+      isActive: (editor) => editor?.isActive({ textAlign: 'right' }) ?? false,
+      command: (editor) => editor?.chain().focus().setTextAlign('right').run(),
+      icon: AlignRight,
+    },
+    {
+      name: "align-justify",
+      isActive: (editor) => editor?.isActive({ textAlign: 'justify' }) ?? false,
+      command: (editor) => editor?.chain().focus().setTextAlign('justify').run(),
+      icon: AlignJustify,
     },
   ];
   return (

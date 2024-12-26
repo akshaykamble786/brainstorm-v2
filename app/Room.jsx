@@ -35,9 +35,21 @@ export function Room({ children, params }) {
           userList.push(doc.data())
         });
 
+        console.log('User list before filtering:', userList);
+
         if (text) {
-          userList = userList.filter((user) => user.name.includes(text));
+          userList = userList.filter((user) => {
+            if (user.name && typeof user.name === 'string') {
+              console.log('Checking user name:', user.name);
+              return user.name.includes(text);
+            } else {
+              console.warn('User with invalid name:', user);
+              return false;
+            }
+          });
         }
+
+        console.log('User list after filtering:', userList);
 
         return userList.map((user) => user.id);
       }}

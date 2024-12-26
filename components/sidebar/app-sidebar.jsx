@@ -7,6 +7,7 @@ import {
   Settings2,
   Sparkles,
   Trash2,
+  Calendar,
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
@@ -35,17 +36,22 @@ const data = {
       url: "#",
       icon: Sparkles,
     },
-  ],
-  navSecondary: [
-    {
-      title: "Usage",
-      url: "#",
-      icon: Settings2,
-    },
     {
       title: "Templates",
       url: "#",
       icon: Blocks,
+    },
+  ],
+  navSecondary: [
+    {
+      title: "Calendar",
+      url: "#",
+      icon: Calendar,
+    },
+    {
+      title: "Usage",
+      url: "#",
+      icon: Settings2,
     },
     {
       title: "Trash",
